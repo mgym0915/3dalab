@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "bodyType": "biped",
+  "bones": {"root":"root","motion":"motion","torso":"torso","head":"head"},
+  "morphs": {"mouthOpen":"mouthOpen"},
+  "clips": {"Idle":"Idle","Walk":"Walk","Jump":"Jump","Nod":"Nod","ShakeHead":"ShakeHead","Talk":"Talk"},
+  "jumpVerticalMotion": "runtime",
+  "forward": "+Z",
+  "up": "+Y"
+}

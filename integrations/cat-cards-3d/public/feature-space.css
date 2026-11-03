@@ -1,0 +1,72 @@
+/* Site entry uses the existing room scene and controls without a floating card. */
+.immersive #welcomeCard,
+.immersive.room-waiting #welcomeCard {
+  position: fixed;
+  inset: 92px 0 0;
+  width: 100%;
+  max-width: none;
+  height: calc(100dvh - 92px);
+  min-height: 0;
+  margin: 0;
+  padding: 40px 8vw 64px;
+  transform: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: auto;
+  text-align: left;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  background: linear-gradient(90deg, #14271ff2, #14271fb8 38%, #14271f12 82%);
+  color: #edf2db;
+}
+.immersive #welcomeCard #startLobby,
+.immersive #welcomeCard #roomLobby {
+  width: min(520px, 100%);
+  flex: 0 0 auto;
+  align-items: flex-start;
+  gap: 24px;
+}
+.immersive #welcomeCard .lobby-cat { width: 60px; height: 60px; }
+.immersive #welcomeCard .lobby-cat svg { width: 44px; height: 44px; }
+.immersive #welcomeCard h2 { margin: 0 0 12px; font-size: clamp(30px, 4vw, 48px); }
+.immersive #welcomeCard .lobby-buttons,
+.immersive #welcomeCard .join-form { display: flex; width: 100%; gap: 14px; }
+.immersive #welcomeCard .lobby-buttons button { flex: 1; }
+.immersive #welcomeCard .lobby-buttons button,
+.immersive #welcomeCard .join-form button,
+.immersive #welcomeCard #beginRoomBtn { min-height: 50px; padding: 13px 20px; font-size: 15px; }
+.immersive #welcomeCard .join-form input { flex: 1; width: 0; min-width: 0; min-height: 50px; font-size: 16px; }
+.immersive #welcomeCard .join-form input::placeholder { font-size: 14px; }
+.immersive #welcomeCard #roomCodeText { font-size: clamp(38px, 5vw, 64px); letter-spacing: 8px; }
+.immersive #welcomeCard .lobby-players { justify-content: flex-start; flex-wrap: wrap; gap: 14px; }
+.immersive #welcomeCard .lobby-player { min-width: 72px; padding: 12px; }
+.immersive #welcomeCard #lobbyStatus { margin: 0; font-size: 14px; }
+@media (max-width: 680px) {
+  .immersive #welcomeCard,
+  .immersive.room-waiting #welcomeCard {
+    inset: 110px 0 0;
+    height: calc(100dvh - 110px);
+    padding: 28px 24px max(32px, env(safe-area-inset-bottom));
+    justify-content: flex-end;
+    background: linear-gradient(0deg, #14271ff5, #14271fd9 62%, #14271f24);
+  }
+  .immersive #welcomeCard #startLobby,
+  .immersive #welcomeCard #roomLobby { gap: 18px; }
+  .immersive #welcomeCard .lobby-cat { display: none; }
+  .immersive #welcomeCard h2 { margin-bottom: 4px; }
+  .immersive #welcomeCard .lobby-buttons,
+  .immersive #welcomeCard .join-form { gap: 10px; }
+  .immersive #welcomeCard .lobby-buttons button,
+  .immersive #welcomeCard .join-form button { padding: 12px 14px; font-size: 14px; }
+}
+@media (max-height: 600px) {
+  .immersive #welcomeCard,
+  .immersive.room-waiting #welcomeCard { justify-content: flex-start; padding-top: 24px; padding-bottom: 24px; }
+  .immersive #welcomeCard .lobby-cat { display: none; }
+  .immersive #welcomeCard #startLobby,
+  .immersive #welcomeCard #roomLobby { gap: 14px; }
+}

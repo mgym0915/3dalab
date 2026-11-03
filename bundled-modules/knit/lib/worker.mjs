@@ -1,0 +1,1 @@
+import {parentPort} from 'node:worker_threads';import {createKernel} from './kernel.mjs';const kernel=createKernel();parentPort.on('message',async job=>{try{const result=await kernel.execute(job.owner,job.input);parentPort.postMessage({id:job.id,result});}catch(error){parentPort.postMessage({id:job.id,error:error.message});}});

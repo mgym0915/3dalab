@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "hostApi": 1,
+  "id": "gandengyan",
+  "name": "干瞪眼",
+  "kind": "game",
+  "space": "118",
+  "version": "1.0.4",
+  "softwareVersion": "1.0.0",
+  "entry": "index.html",
+  "backend": {
+    "kind": "node-handler-v1",
+    "entry": "lib/handler.mjs",
+    "factory": "createGameHandler",
+    "health": "api/health"
+  },
+  "files": {
+    "lib/game.mjs": "b3a683a842775155ccd54c4646286bcb1b5c38387035f82da4f87f872f4d16f5",
+    "lib/handler.mjs": "944707c2255563bda6521c2dcf4c2cfbf675efad62414bfca0e254a8121465c6",
+    "public/app.mjs": "cc9c24030655007fab2bd61c9bb8b38c5e07b077a5fe3a4bf449055367d1b6f6",
+    "public/feature-space.css": "ffe0e5b30c099f4d1cc7384de2fb6d39e4dcb0187270c32de9f14e7ef41e7cbd",
+    "public/host.mjs": "f48f9c09ac4dbe64d6904090acc12b3df22fcb9b8c672f9c057670dd01dba91b",
+    "public/index.html": "0a1a2f5967754a11ec2d4ec54e93696954c1b64d312396b30a2fe11d2e15d67e",
+    "public/rules.mjs": "76aba9ef1295eb797477334b99b3a8fd6315f966a0ef6576f3b683f9302e1e4c",
+    "public/style.css": "7a3219d1f80c2a0cb0895461a7c7da79c35d6d0ebf98e7f086b4b4e346491431",
+    "public/vendor/three.core.js": "613e370f76638fdef83926642bf256dc9615684922de1ce1f63a8583e5d78578",
+    "public/vendor/three.module.js": "104f56145899722094556490d787aae0617cc2fc3382f31df02d724ea1aee341"
+  }
+}

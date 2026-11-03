@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "hostApi": 1,
+  "id": "knit",
+  "name": "针织质感切片",
+  "space": "3d",
+  "kind": "tool",
+  "version": "1.1.2",
+  "softwareVersion": "3.1-online",
+  "entry": "index.html",
+  "backend": {
+    "kind": "node-handler-v1",
+    "entry": "lib/handler.mjs",
+    "factory": "createKnitOnlineHandler",
+    "health": "api/health"
+  },
+  "files": {
+    "lib/handler.mjs": "2d894b171aa4dc3e31338bd6687b9813de6f0557f122d110915d3df155c35b49",
+    "lib/kernel.mjs": "04be061e1f8c392b64f12d254e1c516786238342b88fc7f545c8863a9d820dfd",
+    "lib/original-worker.js": "0a4bedb569a482a61aba3a0234b4843770dd06991e9b10a149030f44ce58767a",
+    "lib/worker.mjs": "3a506dac3a4d8e605cfb5b97104a2a1f57899a2165b9035c56766dd171d0ebb0",
+    "public/index.html": "facb03ee125ca1ba77dbf8158cde5273b7f003441b1d15a3029fc37957ceb6bb",
+    "public/mobile-online.css": "40db3e922881ce44170f674272c1268beb02ad83d85a729f2113a74627658ca8",
+    "public/provider-bridge.js": "4c71d52f9db2ccca1bc62c6faf0e44f8bbd9aa61f4322240f7de706758a50419",
+    "public/remote-worker.js": "0c3be74ea96e180459039100ca58b925bcbe814753d0964467277e03929fc568"
+  }
+}

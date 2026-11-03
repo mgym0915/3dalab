@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "active": {
+    "lantern": {
+      "id": "lantern",
+      "version": "1.1.2",
+      "hash": "14b3e34f2f0135941fc3679c0c18b19226bcae1dd2b24129db668e974574c796",
+      "softwareVersion": "V6-online",
+      "loaded": "2026-11-01T17:09:28.733Z"
+    },
+    "depth": {
+      "id": "depth",
+      "version": "1.1.2",
+      "hash": "c2eca60d6e7a862e9e7446f34833fecd0f7144e247f2f783201b91930b6bcaf7",
+      "softwareVersion": "1.3-online",
+      "loaded": "2026-11-01T17:09:29.133Z"
+    },
+    "knit": {
+      "id": "knit",
+      "version": "1.1.2",
+      "hash": "68cfffc78a35f718307b7bbc51ebfb71c936b2802861bd0bd30455105e9cd473",
+      "softwareVersion": "3.1-online",
+      "loaded": "2026-11-01T17:09:29.365Z"
+    },
+    "letters": {
+      "id": "letters",
+      "version": "1.4.0",
+      "hash": "e7fffec87e353efb02049d65241a11fbb337c403681cb3ae72bb18a0e4dc2bf1",
+      "softwareVersion": "2026-11-02-pricing-online",
+      "loaded": "2026-11-02T09:12:49.518Z"
+    },
+    "cat-cards-3d": {
+      "id": "cat-cards-3d",
+      "version": "1.2.3",
+      "hash": "49ed5eb35e5b438be933496538efb55db0852fdb5eba8dc7729b6a721ee86421",
+      "softwareVersion": "3.2.0",
+      "loaded": "2026-11-02T05:01:39.256Z"
+    },
+    "gandengyan": {
+      "id": "gandengyan",
+      "version": "1.0.4",
+      "hash": "a39191e718e89cbfa257e80fd6c101fd49aa61da399b5978232099046fc5e795",
+      "softwareVersion": "1.0.0",
+      "loaded": "2026-11-02T05:01:39.598Z"
+    }
+  },
+  "history": {}
+}

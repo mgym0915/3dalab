@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "hostApi": 1,
+  "id": "cat-cards-3d",
+  "name": "猫猫牌 3D",
+  "space": "118",
+  "kind": "game",
+  "version": "1.2.3",
+  "softwareVersion": "3.2.0",
+  "entry": "index.html",
+  "backend": {
+    "kind": "node-handler-v1",
+    "entry": "lib/handler.cjs",
+    "factory": "createCatHandler",
+    "health": "api/health"
+  }
+}

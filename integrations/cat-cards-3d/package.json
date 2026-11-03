@@ -1,0 +1,13 @@
+{
+  "name": "cat-cards-3d",
+  "version": "3.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.cjs",
+    "check": "node --check server.cjs && node --check public/app.js && node --check public/scene.js"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "description": "猫猫牌 3D：2–5 人房间联机与人机练习"
+}

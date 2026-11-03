@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "hostApi": 1,
+  "id": "depth",
+  "name": "浮光",
+  "space": "3d",
+  "kind": "tool",
+  "version": "1.1.2",
+  "softwareVersion": "1.3-online",
+  "entry": "index.html",
+  "backend": {
+    "kind": "node-handler-v1",
+    "entry": "lib/handler.mjs",
+    "factory": "createDepthOnlineHandler",
+    "health": "api/health"
+  },
+  "files": {
+    "lib/core.js": "7d1a04ea6052f4ee5dd57d28b4ffe4a7c8026abb1d8c3c5af10f5be88df649e2",
+    "lib/handler.mjs": "fe597ab598fe82e84971ac9dae10aa47c15cb43c62237eb2d281ad81a66cb83a",
+    "lib/kernel.mjs": "ce8b04e1f70d982daec9bed68c2816d2488bc6860c8d008bd74965292cc8338c",
+    "lib/limits.json": "d0badba1cf6b649680fb7ec9c43b753c1b76b77dbf91220a07adad6bef74ef6f",
+    "lib/worker.mjs": "3a506dac3a4d8e605cfb5b97104a2a1f57899a2165b9035c56766dd171d0ebb0",
+    "public/index.html": "ef3d2796a8376174adfdd7ca1ea16eebce38733bc9bdc3d037216dc3e0474eba",
+    "public/mobile-online.css": "e689a7327d30e66c70e1fdd9132ad2d94f568b971e4dafc37a66def2550cf44c",
+    "public/web-bridge.js": "9a3afff1ff2a2dae4eaad4b7466dae7a9a76bd1a6e916d9f04915b7361699204"
+  }
+}

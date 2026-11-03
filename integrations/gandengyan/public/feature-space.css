@@ -1,0 +1,34 @@
+/* Keep the full table visible while entering an online or AI game. */
+#lobby {
+  position: fixed;
+  inset: 80px 0 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 40px 8vw 64px;
+  transform: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+  overflow: auto;
+  text-align: left;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  background: linear-gradient(90deg, #edf2e6f5, #edf2e6c4 38%, #edf2e60a 82%);
+}
+#lobby h2 { margin: 0 0 12px; font-size: clamp(30px, 4vw, 48px); }
+#lobby > div, #lobby #join { width: min(480px, 100%); gap: 14px; flex: 0 0 auto; }
+#lobby button { min-height: 52px; font-size: 15px; }
+#lobby > button { width: min(480px, 100%); flex: 0 0 auto; }
+#lobby > div button { flex: 1; }
+#lobby #join input { width: 0; flex: 1; min-height: 52px; font-size: 16px; }
+@media (max-width: 600px) {
+  #lobby { padding: 28px 24px max(32px, env(safe-area-inset-bottom)); justify-content: flex-end; background: linear-gradient(0deg, #edf2e6f5, #edf2e6d9 62%, #edf2e624); }
+  #lobby > div, #lobby #join { gap: 10px; }
+  #lobby button { padding: 12px 14px; font-size: 14px; }
+}
+@media (max-height: 600px) { #lobby { justify-content: flex-start; padding-top: 24px; padding-bottom: 24px; gap: 18px; } }

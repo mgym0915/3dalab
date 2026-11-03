@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "hostApi": 1,
+  "id": "knit",
+  "name": "针织质感切片",
+  "space": "3d",
+  "kind": "tool",
+  "version": "1.1.2",
+  "softwareVersion": "3.1-online",
+  "entry": "index.html",
+  "backend": {
+    "kind": "node-handler-v1",
+    "entry": "lib/handler.mjs",
+    "factory": "createKnitOnlineHandler",
+    "health": "api/health"
+  }
+}

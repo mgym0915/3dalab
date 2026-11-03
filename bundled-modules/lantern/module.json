@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "hostApi": 1,
+  "id": "lantern",
+  "name": "吴山灯笼",
+  "space": "3d",
+  "kind": "tool",
+  "version": "1.1.2",
+  "softwareVersion": "V6-online",
+  "entry": "index.html",
+  "backend": {
+    "kind": "node-handler-v1",
+    "entry": "lib/handler.mjs",
+    "factory": "createLanternHandler",
+    "health": "api/health"
+  },
+  "files": {
+    "lib/controls.json": "4c072eb8aed0798377d867399d8ed56812015240bf18e07312f008974cc91a3d",
+    "lib/handler.mjs": "585ffec574a6cf47b8a2baf8e85e55de2cd64647314c801ae3b7a805301a4580",
+    "lib/kernel.mjs": "5275c8747bb1c2c8ac4ed6de4a40a51a27d79274d12b74b738a02c62415cf1c4",
+    "lib/original-kernel.js": "fd990cb3ca6405733ac8114baed10a9131d044499d0046ca8a3ca6efa1850c43",
+    "lib/worker.mjs": "3a506dac3a4d8e605cfb5b97104a2a1f57899a2165b9035c56766dd171d0ebb0",
+    "public/index.html": "4ba930e2c72236cb071227a2b7e621e0356eafc777d6aa331f37e422307c37b6",
+    "public/mobile-online.css": "4073d22a8da44bb458a73355bf3e8f25507750389d394164674d547ec3475699"
+  }
+}

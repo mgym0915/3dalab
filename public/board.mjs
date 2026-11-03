@@ -1,0 +1,11 @@
+export function mount(root,{api,toast,escape,name}){
+ let disposed=false;
+ root.innerHTML=`<form class="message-form"><textarea name="body" placeholder="留言内容" maxlength="500" aria-label="留言内容" required></textarea><div class="form-bottom"><span class="char-count">0 / 500</span><button class="primary-button" type="submit">发布</button></div></form><div class="messages-heading"><span class="message-count"></span><button class="refresh-button">刷新 ↻</button></div><div class="messages-list" aria-live="polite"></div>`;
+ const form=root.querySelector('form'),list=root.querySelector('.messages-list');
+ async function reload(){try{const {messages}=await api('/api/messages');if(disposed)return;root.querySelector('.message-count').textContent=messages.length?messages.length+' 条留言':'暂无留言';list.innerHTML=messages.length?messages.map(m=>`<article class="message"><p>${escape(m.body)}</p><div class="message-meta"><strong>${escape(m.author)}</strong><time>${new Date(m.created).toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}</time></div>${m.mine?`<button class="delete-button" data-delete="${escape(m.id)}">删除</button>`:''}</article>`).join(''):'<div class="empty-board">暂无留言</div>';}catch(error){if(!disposed)list.textContent=error.message;}}
+ form.elements.body.addEventListener('input',()=>root.querySelector('.char-count').textContent=form.elements.body.value.length+' / 500');
+ form.addEventListener('submit',async event=>{event.preventDefault();const button=form.querySelector('button');button.disabled=true;try{await api('/api/messages',{method:'POST',body:JSON.stringify({body:form.elements.body.value})});form.elements.body.value='';root.querySelector('.char-count').textContent='0 / 500';await reload();toast('已发布');}catch(error){toast(error.message);}finally{button.disabled=false;}});
+ root.querySelector('.refresh-button').addEventListener('click',reload);
+ list.addEventListener('click',async event=>{const button=event.target.closest('[data-delete]');if(!button)return;if(button.dataset.confirm!=='yes'){button.dataset.confirm='yes';button.textContent='确认删除';return;}button.disabled=true;try{await api('/api/messages/'+button.dataset.delete,{method:'DELETE'});await reload();}catch(error){toast(error.message);button.disabled=false;}});
+ reload();return{reload,dispose(){disposed=true;}};
+}

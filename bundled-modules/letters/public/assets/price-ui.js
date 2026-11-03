@@ -1,0 +1,20 @@
+(function(g){
+ 'use strict';
+ function create({getQuote,onOptions}){
+  const $=id=>document.getElementById(id),fmt=(n,d=2)=>Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});let developer=false,taps=0,lastTap=0,toastTimer,raf=0;
+  function options(){return{product:$('productType').value,color:$('colorMode').value,lighting:$('lightingMode').value,installation:$('installationMode').value};}
+  for(const id of ['productType','colorMode','lightingMode','installationMode'])$(id).addEventListener('change',()=>onOptions?.(options()));
+  $('devTrigger').onclick=()=>{if(developer)return;const now=performance.now();taps=now-lastTap<=2000?taps+1:1;lastTap=now;if(taps!==7)return;developer=true;document.body.classList.add('dev-mode');$('resultPrice').tabIndex=0;$('resultPrice').setAttribute('role','button');$('resultPrice').setAttribute('aria-label','查看价格核算明细');clearTimeout(toastTimer);$('toast').textContent='开发者模式已开启';$('toast').classList.add('visible');toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),2200);};
+  function details(){const q=getQuote();if(!developer||!q||$('weightCard').getAttribute('aria-busy')==='true')return;const host=$('priceDetailContent');host.replaceChildren();const summary=document.createElement('div');summary.className='detail-summary';summary.textContent=`${q.product==='diamond'?'钻闪字':'光面字'} · ${q.color==='multi'?'多色':'单色'} · ${q.lighting==='rgb'?'RGB':'常亮'} · 贴墙安装\n总打印克重 ${fmt(q.totalWeight,3)} g · 模型高度 ${fmt(q.printHeight)} mm · 底面 ${q.bottomLayers} 层`;summary.style.whiteSpace='pre-line';host.append(summary);
+   const wrap=document.createElement('div');wrap.className='detail-table-wrap';const table=document.createElement('table');table.className='detail-table';const header=document.createElement('tr');for(const label of ['项目','用量','单位','单价（元）','小计（元）']){const cell=document.createElement('th');cell.textContent=label;header.append(cell);}table.append(header);
+   for(const row of q.rows){const tr=document.createElement('tr');for(const value of [row.name,fmt(row.quantity,3),row.unit,fmt(row.rate,3),fmt(row.amount)]){const cell=document.createElement('td');cell.textContent=value;tr.append(cell);}table.append(tr);}wrap.append(table);host.append(wrap);const total=document.createElement('div');total.className='detail-total';total.textContent='合计 ¥'+fmt(q.total);host.append(total);$('priceDetails').showModal();
+  }
+  $('resultPrice').onclick=details;$('resultPrice').onkeydown=e=>{if(developer&&['Enter',' '].includes(e.key)){e.preventDefault();details();}};$('closePriceDetails').onclick=()=>$('priceDetails').close();
+  function guide(){raf=0;const card=$('weightCard'),rect=card.getBoundingClientRect(),h=window.visualViewport?.height||innerHeight,visible=Math.max(0,Math.min(rect.bottom,h)-Math.max(rect.top,0)),busy=card.getAttribute('aria-busy')==='true';$('mobileGuide').hidden=!matchMedia('(max-width:900px)').matches||!busy||visible>=Math.min(80,rect.height*.5);$('guideStatus').textContent=$('weightStatus').textContent;}
+  function scheduleGuide(){if(!raf)raf=requestAnimationFrame(guide);}
+  new MutationObserver(scheduleGuide).observe($('weightCard'),{subtree:true,childList:true,characterData:true,attributes:true});window.addEventListener('scroll',scheduleGuide,{passive:true});window.addEventListener('resize',scheduleGuide);window.visualViewport?.addEventListener('resize',scheduleGuide);
+  $('mobileGuide').onclick=()=>document.querySelector('.calculation-card').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'end'});scheduleGuide();
+  return{options,details,fit(){const out=$('resultPrice');out.style.removeProperty('font-size');const available=$('weightNumber').clientWidth-48;if(out.scrollWidth>available){const size=parseFloat(getComputedStyle(out).fontSize);out.style.fontSize=Math.max(20,Math.floor(size*available/out.scrollWidth))+'px';}},dispose(){clearTimeout(toastTimer);if(raf)cancelAnimationFrame(raf);}};
+ }
+ g.PriceUI={create};
+})(globalThis);

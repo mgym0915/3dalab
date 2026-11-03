@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "hostApi": 1,
+  "id": "depth",
+  "name": "浮光",
+  "space": "3d",
+  "kind": "tool",
+  "version": "1.1.2",
+  "softwareVersion": "1.3-online",
+  "entry": "index.html",
+  "backend": {
+    "kind": "node-handler-v1",
+    "entry": "lib/handler.mjs",
+    "factory": "createDepthOnlineHandler",
+    "health": "api/health"
+  }
+}

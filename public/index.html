@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+ <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#eceeea"><title>3DAlab</title>
+ <style>html,body{margin:0;background:#eef0eb}#boot{position:fixed;inset:0;z-index:100;background:#eef0eb;display:grid;place-content:center;gap:22px;text-align:center;color:#34423a;font:42px Georgia,serif}#boot i{display:block;height:2px;width:100px;margin:auto;background:#d9ded5;overflow:hidden}#boot i:after{content:"";display:block;width:35%;height:100%;background:#81927e;animation:boot 1.3s infinite ease-in-out}@keyframes boot{to{transform:translateX(290%)}}#boot button{font:13px sans-serif;background:none;border:1px solid #acb8a5;padding:9px 20px;border-radius:8px;color:inherit}[hidden]{display:none!important}</style>
+ <link rel="icon" href="/assets/favicon.svg"><link rel="preload" as="fetch" href="/assets/models/classroom-white-sun-v7.glb" crossorigin fetchpriority="high"><link rel="preload" as="fetch" href="/assets/models/classroom-color-sun-v7.glb" crossorigin><link rel="stylesheet" href="/style.css?v=30"><link rel="stylesheet" href="/community/space.css?v=31"><script type="module" src="/main.mjs?v=31"></script>
+<link rel="stylesheet" href="/feature-space.css"></head>
+<body class="booting">
+ <div id="boot" aria-live="polite"><span>3DAlab</span><i></i><button id="retryBoot" hidden>重新加载</button></div>
+ <div id="sceneViewport" class="scene-viewport" aria-label="实验室场景">
+  <div id="world" class="world">
+   <canvas id="colorCanvas" aria-hidden="true"></canvas>
+   <div id="benchLayer" class="bench-layer" aria-hidden="true"><div class="bench-image"></div><div class="print-texture"></div></div><div class="print-head" aria-hidden="true"></div>
+   <div id="hotspots" class="hotspots" inert>
+    <button class="hotspot board-hotspot" data-panel="board" data-space="118"><span class="card-symbol">▤</span><strong>希沃聊天板</strong><span>↗</span></button>
+    <button class="hotspot games-hotspot" data-panel="games" data-space="118"><span class="card-symbol">♧</span><strong>棋牌室</strong><span>↗</span></button>
+    <div id="toolHotspots"></div>
+   </div>
+  </div>
+ </div>
+ <div class="edge-shade" aria-hidden="true"></div><div id="entryFlash" class="entry-flash" aria-hidden="true"></div>
+ <header class="topbar" id="topbar" hidden><a class="wordmark" href="/" aria-label="3DAlab 首页">3DAlab</a><div class="top-actions"><button id="onlineButton" hidden>在线 <span id="onlineCount">—</span></button><button id="returnHome">返回主页 ↗</button></div></header>
+ <main>
+  <section id="entry" class="entry" aria-labelledby="entryTitle"><h1 id="entryTitle">3D<span>A</span>lab</h1><form id="keyForm" autocomplete="off"><div id="keyField" class="key-field"><input id="keyInput" type="password" name="key" maxlength="32" placeholder="请输入密钥" aria-label="空间密钥" aria-describedby="keyStatus" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="submit" id="enterButton" aria-label="进入实验室">↗</button></div><div id="keyStatus" class="key-status" aria-live="polite"></div></form></section>
+  <h2 id="spaceTitle" class="space-title" hidden></h2><nav id="mobileDock" class="mobile-dock" aria-label="功能入口" hidden></nav>
+  <button id="chatButton" class="chat-button" hidden disabled>加入聊天室</button>
+ </main>
+ <div id="danmaku" class="danmaku" aria-hidden="true"></div>
+ <dialog id="nameDialog" class="name-dialog" aria-labelledby="nameTitle"><form id="nameForm"><h2 id="nameTitle">填写名字</h2><input id="nameInput" name="name" maxlength="24" required aria-label="名字" placeholder="名字" autocomplete="nickname"><p id="nameError" class="form-error" aria-live="polite"></p><button type="submit" class="primary-button">进入</button></form></dialog>
+ <dialog id="featureDialog" aria-labelledby="dialogTitle"><header class="dialog-head"><h2 id="dialogTitle"></h2><button id="closeDialog" class="close-button" aria-label="返回实验室">← 返回实验室</button><button id="gameRankingButton" hidden>积分榜</button></header><div id="dialogContent"></div><aside id="gameRankingPanel" aria-label="猫猫牌积分榜" hidden><button id="closeGameRanking" aria-label="收起积分榜">×</button><h3>猫猫牌积分榜</h3><ol id="gameRankingRows"></ol></aside></dialog>
+ <div id="toast" class="toast" role="status"></div>
+</body></html>

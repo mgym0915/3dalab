@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "hostApi": 1,
+  "id": "cat-cards",
+  "name": "猫猫牌",
+  "space": "118",
+  "kind": "game",
+  "version": "1.1.2",
+  "softwareVersion": "原平面版",
+  "entry": "index.html",
+  "backend": {
+    "kind": "node-handler-v1",
+    "entry": "lib/handler.cjs",
+    "factory": "createCatHandler",
+    "health": "api/health"
+  }
+}

@@ -1,0 +1,49 @@
+:root{--feature-header:56px}
+#featureDialog{position:fixed;inset:0;width:100vw;max-width:none;height:100vh;height:100dvh;max-height:none;margin:0;padding:0;border:0;border-radius:0;background:#eef2e8;box-shadow:none;overflow:hidden;transform:none;animation:space-enter .22s ease-out;color:#30483b}
+#featureDialog[open]{display:flex;flex-direction:column}
+#featureDialog::backdrop{background:#e7ede2;backdrop-filter:none}
+#featureDialog>.dialog-head{display:flex;align-items:center;justify-content:flex-start;gap:20px;flex:0 0 auto;min-height:var(--feature-header);padding:8px max(24px,env(safe-area-inset-right)) 8px max(24px,env(safe-area-inset-left));margin:0;border-bottom:1px solid #ced8c9;background:#f7f9f2;box-shadow:none;z-index:2}
+#featureDialog #dialogTitle{font-size:15px;font-weight:500;letter-spacing:.3px;margin:0;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#featureDialog #closeDialog{order:-1;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:auto;min-width:0;height:38px;margin:0;padding:0 12px 0 0;border:0;border-radius:0;background:none;font-size:13px;line-height:1.4;white-space:nowrap;color:#526b56}
+#featureDialog #dialogContent{position:relative;flex:1 1 auto;min-height:0;width:100%;max-width:none;height:auto;margin:0;padding:28px max(28px,calc((100vw - 1440px)/2));overflow:auto;overscroll-behavior:contain}
+#featureDialog.iframe-dialog #dialogContent{display:flex;min-height:0;padding:0;overflow:hidden;background:#e5ebdf}
+#featureDialog .tool-frame{display:block;flex:1 1 auto;width:100%;height:100%;min-width:0;min-height:0;max-height:none;margin:0;border:0;border-radius:0;background:#eef2e8}
+#featureDialog .game-container{display:flex;width:100%;height:100%;min-height:0;margin:0;padding:0}
+.feature-open>.scene-viewport,.feature-open>.topbar,.feature-open>#spaceHud,.feature-open>.danmaku{visibility:hidden;pointer-events:none}
+#featureDialog.panel-games:not(.iframe-dialog) #dialogContent{padding:0;overflow:auto;background:radial-gradient(ellipse at 50% 5%,#f4f6e7 0,transparent 54%),linear-gradient(145deg,#e1e9db,#bbcdbb)}
+.chess-room{display:flex;align-items:center;justify-content:center;min-height:100%;padding:48px 7vw 64px;isolation:isolate;background:linear-gradient(180deg,transparent 0 58%,#617c6c0a 58% 59%,#79918217 59%)}
+#featureDialog .game-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(24px,4vw,68px);width:min(1120px,100%);margin:0;padding:0;background:none}
+.game-entry{display:flex;flex-direction:column;gap:0;align-items:stretch;min-height:400px;padding:0;border:0;border-radius:0;background:none;color:#2b4335;text-align:left;transition:transform .25s}
+.game-entry:hover{transform:translateY(-6px)}
+.game-table-surface{position:relative;display:flex;align-items:center;justify-content:center;flex:1;min-height:310px;border:12px solid #9b8262;border-radius:48%;background:radial-gradient(ellipse at 48% 40%,#678f76,#365b48 85%);box-shadow:0 14px 0 #71654e,0 28px 30px #31452f30,inset 0 0 0 2px #c5cfab66;perspective:900px;transform:rotateX(12deg)}
+.game-entry.gande-entry .game-table-surface{border-color:#82907a;background:radial-gradient(ellipse at 48% 40%,#9ba78a,#607761 85%);box-shadow:0 14px 0 #536551,0 28px 30px #31452f30,inset 0 0 0 2px #dfe6c366}
+.preview-card{position:absolute;width:clamp(80px,9vw,132px);height:auto;aspect-ratio:1024/1331;object-fit:cover;border-radius:8px;box-shadow:0 15px 18px #2037254a;transform:translateX(-34%) rotate(-15deg)}
+.preview-card:last-child{transform:translateX(38%) rotate(13deg)}
+.playing-card{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;width:clamp(74px,9vw,128px);aspect-ratio:5/7;padding:12px;background:#fbfcf3;border:1px solid #dce3d3;border-radius:9px;box-shadow:0 14px 18px #2037253d;font:30px Georgia,serif;transform:translateX(12%) rotate(-15deg)}
+.playing-card:last-child{color:#ad5a4f;transform:translateX(-6%) translateY(8%) rotate(12deg)}
+.playing-card i{font-size:56px;align-self:center;font-style:normal}
+.game-entry-label{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:35px 10px 0}
+.game-entry-label strong{font-size:25px;font-weight:500;letter-spacing:1px}.game-entry-label>span{font-size:30px;color:#6c836a}
+#featureDialog.panel-board #dialogContent{display:flex;justify-content:center;padding:0}
+#featureDialog .space-chat{width:min(1120px,100%);height:100%;min-height:0;max-height:none;padding:24px 28px;background:#f4f7ef}
+#featureDialog .chat-history{flex:1;min-height:0;max-height:none;padding:12px 8px 18px}
+#featureDialog .space-chat form{flex:0 0 auto;padding-top:14px;border-top:1px solid #d8e1d0}
+#featureDialog .group-message>div{max-width:75%}
+#featureDialog .message-bubble{font-size:14px}.panel-board .chat-picture{max-height:45dvh}
+#featureDialog .workspace-toolbar{margin-bottom:24px}.panel-workspace .document-list{grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));align-items:start;gap:20px}
+#featureDialog .document-form{max-width:960px;margin:0 0 28px;padding:24px}
+#featureDialog .bead-layout{grid-template-columns:minmax(360px,1fr) minmax(360px,1.15fr);gap:36px;align-items:stretch}
+#featureDialog .bead-preview{height:auto;min-height:540px}.panel-craft .bead-gallery{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px}
+#featureDialog .bead-gallery-heading{margin-top:40px}
+#featureDialog .profile-form{max-width:1000px;margin:0 auto;gap:24px}.panel-profile .character-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.panel-profile .character-grid img{width:104px;height:104px}
+#featureDialog.panel-loan #dialogContent{display:grid;grid-template-columns:minmax(360px,1.6fr) minmax(280px,1fr);grid-template-rows:auto auto auto 1fr;gap:20px 50px;padding-top:32px;padding-bottom:32px}
+#featureDialog .loan-preview{grid-column:1;grid-row:1/6;width:100%;height:100%;min-height:540px;border-radius:0;background:radial-gradient(ellipse at 50% 38%,#f7f9ee,#dce5d6 75%)}
+#featureDialog .loan-prompt{align-self:end;margin:30px 0 0;font-size:20px}.panel-loan .loan-actions{flex-wrap:wrap;margin:10px 0}.panel-loan .loan-actions button{min-height:48px;font-size:14px}.panel-loan .loan-info{font-size:14px}.panel-loan .loan-records{min-height:0;overflow:auto;font-size:13px;line-height:1.9}.panel-loan #dialogContent>.primary-button{grid-column:2}
+#gameRankingButton{margin-left:auto;border:1px solid #ccd7c3;border-radius:7px;background:#edf2e6;padding:8px 14px;min-height:36px;font-size:12px}
+#gameRankingPanel{position:absolute;right:20px;top:calc(var(--feature-header) + 14px);z-index:10;width:320px;max-width:calc(100vw - 32px);max-height:calc(100% - var(--feature-header) - 32px);padding:20px;overflow:auto;background:#f7faeffa;border:1px solid #d7e0cf;box-shadow:0 12px 35px #243d2b26;border-radius:12px}
+#gameRankingPanel h3{font-size:16px;margin:0 0 18px}#gameRankingPanel>button{float:right;width:28px;height:28px;border:0;background:none;font-size:20px}#gameRankingRows{margin:0;padding:0;list-style:none}#gameRankingRows li{display:flex;justify-content:space-between;gap:20px;font-size:13px;padding:11px 0;border-bottom:1px solid #e1e8d8}
+@keyframes space-enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(min-width:1600px){.game-entry{min-height:470px}.game-table-surface{min-height:365px}}
+@media(max-width:750px){:root{--feature-header:52px}#featureDialog>.dialog-head{gap:12px;padding:7px 14px;padding-top:max(7px,env(safe-area-inset-top));min-height:var(--feature-header)}#featureDialog #closeDialog{font-size:12px;padding-right:3px}#featureDialog #dialogTitle{font-size:13px}#featureDialog #dialogContent{padding:20px 16px;padding-bottom:max(20px,env(safe-area-inset-bottom))}#featureDialog.iframe-dialog #dialogContent{padding:0}.chess-room{padding:30px 26px 45px}#featureDialog .game-choices{grid-template-columns:1fr;gap:38px;width:min(440px,100%)}.game-entry{min-height:265px}.game-table-surface{min-height:220px;border-width:9px}.preview-card{width:90px}.playing-card{width:85px;font-size:24px}.playing-card i{font-size:46px}.game-entry-label{padding-top:27px}.game-entry-label strong{font-size:20px}.game-entry-label>span{font-size:24px}#featureDialog .space-chat{padding:12px 14px;padding-bottom:max(12px,env(safe-area-inset-bottom))}#featureDialog .group-message>div{max-width:82%}#featureDialog .bead-layout{grid-template-columns:1fr;gap:20px}#featureDialog .bead-preview{height:350px;min-height:300px}#featureDialog .document-form{padding:16px}.panel-profile .character-grid img{width:66px;height:66px}.panel-profile .character-grid{gap:9px}#featureDialog.panel-loan #dialogContent{display:flex;flex-direction:column;gap:12px;padding-top:0}#featureDialog .loan-preview{height:45dvh;min-height:300px;flex:0 0 auto}#featureDialog .loan-prompt{align-self:center;font-size:17px;margin:10px 0}.panel-loan .loan-records{overflow:visible}.panel-loan .loan-actions{gap:7px}.panel-loan .loan-actions button{font-size:12px;padding:10px}.panel-loan .loan-info{margin:0}.panel-loan #dialogContent>.primary-button{align-self:center}#gameRankingButton{padding:7px 10px;font-size:11px}}
+@media(max-height:600px) and (min-width:751px){.chess-room{padding:25px 8vw}.game-entry{min-height:280px}.game-table-surface{min-height:215px}.preview-card{width:80px}.playing-card{width:75px;font-size:22px}.playing-card i{font-size:40px}.game-entry-label{padding-top:24px}.game-entry-label strong{font-size:21px}}
+@media(prefers-reduced-motion:reduce){#featureDialog,.game-entry{animation:none;transition:none}}

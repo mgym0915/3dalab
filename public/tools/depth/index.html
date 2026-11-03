@@ -1,0 +1,1271 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f3f2ee">
+<meta name="description" content="离线图片转深度图、平面浮雕和圆柱壳体 STL 工具。图片始终在本机处理。">
+<title>浮光 Relief Lab · 图片转 STL</title>
+<style>
+:root{--paper:#f3f2ee;--panel:#fff;--ink:#26342e;--muted:#7b827b;--line:#e5e7df;--accent:#c86b44;--accent-dark:#ae5332;--soft:#f7ede6;--green:#53735a;--radius:16px;--shadow:0 8px 36px #26342e05;font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;color:var(--ink);color-scheme:light}
+*{box-sizing:border-box}body{margin:0;background:var(--paper)}button,input,select{font:inherit}button,a,input,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:disabled{cursor:wait;opacity:.5}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,canvas:focus-visible{outline:2px solid var(--accent);outline-offset:4px}button{color:inherit}svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}.icon-defs{position:absolute;width:0;height:0;overflow:hidden}
+.app-header{height:64px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:#ffffffdc;gap:24px}.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:38px;height:42px;background:var(--ink);color:#f4eadb;border-radius:11px 11px 15px 3px;display:grid;place-items:center}.brand-mark svg{width:26px;height:29px;stroke-width:1.1}.brand-name{font-family:Georgia,"Noto Serif SC","Songti SC",serif;font-size:23px;letter-spacing:3px;font-weight:600}.brand-name span{font:10px "Segoe UI",sans-serif;letter-spacing:2px;margin-left:11px;color:var(--muted);font-weight:600}.header-right{display:flex;gap:16px;align-items:center}.icon-button{border:1px solid var(--line);border-radius:9px;background:#ffffffb8;width:32px;height:32px;display:inline-grid;place-items:center}.icon-button svg{width:16px;height:16px}.icon-button:hover{background:#f0f1eb}
+.workspace{max-width:1720px;margin:auto;display:grid;grid-template-columns:304px minmax(0,1fr);gap:26px;padding:26px 30px}.controls{border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow);height:calc(100dvh - 116px);min-height:640px;max-height:1100px;display:flex;flex-direction:column;overflow:hidden}.control-scroll{overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#d9dbd3 transparent;flex:1;padding:0 21px}.control-section{padding:21px 0;border-bottom:1px solid var(--line)}.control-section:last-child{border:0}.section-label{display:flex;align-items:center;justify-content:space-between;margin:0 0 15px;font-size:12px;font-weight:650;letter-spacing:.4px}.section-label .number{font:11px Georgia,serif;color:#9da294;margin-right:8px}.quiet-button{border:0;padding:0;background:none;font-size:11px;color:var(--muted);display:inline-flex;align-items:center;gap:4px}.quiet-button:hover{color:var(--accent)}.quiet-button svg{width:13px;height:13px}.drop-zone{position:relative;border:1px dashed #c7cebf;background:#fafbf7;border-radius:11px;width:100%;padding:19px 12px 17px;text-align:center;transition:background .2s,border-color .2s}.drop-zone:hover,.drop-zone.dragging{background:#f6ede4;border-color:var(--accent)}.upload-icon{width:33px;height:33px;border:1px solid #e0e4d9;border-radius:10px;display:grid;place-items:center;margin:0 auto 10px;background:#fff}.upload-icon svg{width:19px;height:19px}.drop-title{display:block;font-size:12px;font-weight:550;line-height:1.7}.drop-title em{color:var(--accent);font-style:normal}.drop-sub{display:block;font-size:10px;color:#8c9386;margin-top:5px;letter-spacing:.3px}.file-line{display:flex;align-items:center;gap:6px;margin:10px 0 0;font-size:10px;color:var(--muted)}.file-line svg{width:12px;height:12px;color:var(--green)}.file-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}.tag{font-size:9px;border:1px solid var(--line);border-radius:4px;padding:2px 5px;color:#7a8475;white-space:nowrap}
+.field{margin:0 0 13px}.field:last-child{margin-bottom:0}.field-label{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;margin-bottom:7px;line-height:1.5}.field-label label{color:#555f53}.value-input{display:flex;align-items:center;gap:3px;font-size:10px;color:#a0a497}.value-input input{width:51px;border:1px solid transparent;border-radius:5px;background:#f6f7f2;padding:3px 4px;text-align:right;font:11px "Consolas","Segoe UI",monospace;color:#344832;-moz-appearance:textfield}.value-input input::-webkit-inner-spin-button{-webkit-appearance:none}.value-input input:focus{outline-color:var(--accent);background:white;border-color:var(--accent)}input[type=range]{--fill:50%;display:block;width:100%;height:13px;margin:0;cursor:pointer;appearance:none;background:transparent;accent-color:var(--accent)}input[type=range]::-webkit-slider-runnable-track{height:3px;border-radius:4px;background:linear-gradient(to right,var(--accent) 0,var(--accent) var(--fill),#e9ece3 var(--fill),#e9ece3 100%)}input[type=range]::-webkit-slider-thumb{appearance:none;width:11px;height:11px;margin-top:-4px;border:2px solid white;border-radius:50%;background:var(--accent);box-shadow:0 0 0 1px #c7b4a0}input[type=range]::-moz-range-track{height:3px;border-radius:4px;background:#e4e9de}input[type=range]::-moz-range-progress{height:3px;background:var(--accent)}input[type=range]::-moz-range-thumb{width:8px;height:8px;border:2px solid white;background:var(--accent);border-radius:50%}select{border:1px solid var(--line);border-radius:7px;background:#fcfcfa;width:100%;padding:8px 9px;font-size:11px;color:#43513d}input[type=checkbox]{accent-color:var(--accent);width:13px;height:13px;margin:0}.check-row{display:flex;align-items:center;gap:7px;font-size:11px;color:#5c6855;cursor:pointer;margin-top:10px;line-height:1.6}.checks{display:flex;justify-content:space-between;gap:12px}.field-hint{margin:8px 0 0;font-size:10px;color:#94998d;line-height:1.8}.depth-legend{height:6px;margin-top:12px;background:linear-gradient(90deg,#25302a,#f3f2e8);border-radius:4px}.legend-labels{display:flex;justify-content:space-between;font-size:9px;color:#92998b;margin-top:5px}.advanced{margin-top:14px}.advanced summary{font-size:11px;color:#798371;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}.advanced summary::after{content:"+";font:16px Georgia,serif;color:#87917b}.advanced[open] summary::after{content:"−"}.advanced[open] summary{margin-bottom:14px}.two-fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}.two-fields .value-input input{width:42px}.dimension-lock{margin:0 0 15px;font-size:10px}.preset-row{display:flex;gap:6px;margin-bottom:15px}.preset-button{border:1px solid var(--line);border-radius:6px;padding:5px 7px;background:#fafbf7;font-size:10px;color:#7b8671}.preset-button:hover{border-color:#c9a086;color:#aa5838}.export-area{padding:16px 20px 13px;background:#fff;border-top:1px solid var(--line);box-shadow:0 -5px 20px #26342e04}.export-button{width:100%;display:flex;justify-content:center;align-items:center;gap:9px;background:var(--accent);color:#fff;border:0;border-radius:9px;padding:13px 12px;font-size:12px;font-weight:600;box-shadow:0 4px 10px #c86b441c;transition:background .15s,transform .15s}.export-button:hover{background:var(--accent-dark);transform:translateY(-1px)}.export-button svg{width:17px;height:17px}.export-note{display:flex;justify-content:center;gap:7px;font-size:9px;color:#969c8e;margin-top:8px}.export-note span+span::before{content:"·";padding-right:7px}
+.main{min-width:0}.preview-panel{border:1px solid #dfe3d7;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:#f0f2e9}.preview-toolbar{height:54px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fafbf8;border-bottom:1px solid #e2e6db}.mode-tabs{display:flex;gap:4px}.mode-tab{display:flex;align-items:center;justify-content:center;gap:7px;font-size:11px;border:1px solid transparent;padding:7px 14px;border-radius:7px;background:transparent;color:#818b78}.mode-tab svg{width:16px;height:16px}.mode-tab.active{background:#fff;border-color:#e2e5dc;color:#3c5137;box-shadow:0 2px 5px #28382907}.live-state{display:flex;align-items:center;gap:6px;font-size:10px;color:#8a9482}.status-dot{width:5px;height:5px;border-radius:50%;background:#809878;box-shadow:0 0 0 3px #80987810}.live-state.busy .status-dot{background:var(--accent);animation:pulse 1s infinite}.stage{position:relative;height:clamp(365px,calc(100dvh - 415px),650px);min-height:365px;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 42% 30%,#f8f8f0 0,#eef0e5 60%,#e8ecdf 100%)}.stage::before{content:"";position:absolute;inset:0;background-image:radial-gradient(#a6ae951f .6px,transparent .6px);background-size:7px 7px;pointer-events:none;z-index:-1}.stage canvas{display:block;position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}.stage canvas:active{cursor:grabbing}.stage-caption{position:absolute;left:24px;top:20px;pointer-events:none}.stage-caption h2{margin:0;font-size:12px;font-weight:500;color:#596b4f}.stage-caption p{margin:6px 0 0;font:10px "Consolas",monospace;color:#9aa38d;letter-spacing:.4px}.stage-tools{position:absolute;right:18px;top:18px;display:flex;gap:6px}.stage-tools .icon-button{background:#ffffff7a;border-color:#d7dece}.stage-bottom{position:absolute;bottom:15px;left:21px;right:18px;display:flex;align-items:end;justify-content:space-between;gap:12px;pointer-events:none}.axis-widget{display:flex;align-items:center;gap:8px;font-size:9px;color:#9aa38e}.axis-widget svg{width:39px;height:39px;stroke-width:1.1}.stage-instructions{font-size:9px;color:#909d82;letter-spacing:.2px}.stage-instructions span{margin:0 7px;color:#bcc4af}.material-picker{display:flex;align-items:center;gap:7px;pointer-events:auto}.material-picker button{width:17px;height:17px;border:3px solid #f4f5ed;border-radius:50%;box-shadow:0 0 0 1px transparent;background:var(--swatch)}.material-picker button.active{box-shadow:0 0 0 1px #899780}.material-picker span{font-size:9px;color:#919c85;margin-right:3px}.preview-footer{background:#f9faf5;border-top:1px solid #dfe4d5;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}.model-stats{display:flex;gap:26px}.stat-label{font-size:9px;color:#939b88}.stat-value{margin-left:7px;font:11px "Consolas",monospace;color:#586c4b}.mesh-note{font-size:9px;color:#9aa38d;display:flex;align-items:center;gap:5px}.mesh-note svg{width:13px;height:13px;color:#7f9573}.webgl-fallback{display:none;position:absolute;inset:80px 30px;text-align:center;align-content:center;background:#f5f6eee8;border:1px solid #dfe5d6;border-radius:12px;padding:24px;font-size:12px;line-height:2;color:#748166}.webgl-fallback.show{display:block}
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:17px}.image-card{border:1px solid var(--line);background:#ffffffcf;border-radius:12px;overflow:hidden;min-width:0}.card-title{display:flex;align-items:center;justify-content:space-between;height:39px;padding:0 13px;border-bottom:1px solid #eef0e8;font-size:10px;color:#5a6c50}.card-title .card-num{font:9px Georgia,serif;color:#b3b7a9;margin-right:7px}.image-wrap{position:relative;height:132px;display:grid;place-items:center;background-color:#f8f9f4;background-image:linear-gradient(45deg,#e8ece24d 25%,transparent 25%),linear-gradient(-45deg,#e8ece24d 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e8ece24d 75%),linear-gradient(-45deg,transparent 75%,#e8ece24d 75%);background-size:12px 12px;background-position:0 0,0 6px,6px -6px,-6px 0}.image-wrap canvas{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}.image-card-foot{padding:8px 12px;font-size:9px;color:#969d8e;border-top:1px solid #eef0e8;display:flex;justify-content:space-between;gap:6px;white-space:nowrap}
+.global-drop{display:none;position:fixed;inset:12px;border:2px dashed var(--accent);border-radius:20px;background:#fbf7f0ee;z-index:100;place-items:center;pointer-events:none;backdrop-filter:blur(5px)}.global-drop.show{display:grid}.global-drop div{text-align:center;font:25px Georgia,"Songti SC",serif;color:var(--accent)}.global-drop svg{display:block;width:46px;height:46px;margin:0 auto 20px}.toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,18px);padding:12px 20px;border:1px solid #ffffff30;background:#293b30;color:#f4f6ef;font-size:12px;line-height:1.7;border-radius:10px;box-shadow:0 7px 25px #25352b20;z-index:200;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:min(92vw,650px)}.toast.visible{opacity:1;transform:translate(-50%,0)}.toast.error{background:#8c4433}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}dialog{width:min(560px,calc(100vw - 36px));border:1px solid #dfe3d6;border-radius:17px;background:#fafbf7;color:#41533a;padding:25px;box-shadow:0 20px 90px #25352b25}dialog::backdrop{background:#27392970;backdrop-filter:blur(4px)}.dialog-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.dialog-head h2{font:23px Georgia,"Songti SC",serif;margin:0}dialog ol{padding-left:22px;margin:0}dialog li{padding:5px 0;font-size:12px;line-height:1.9}dialog p{font-size:11px;line-height:1.9;color:#849277}dialog kbd{border:1px solid #d9dfd0;border-radius:4px;padding:1px 4px;font-size:10px;background:#fff}.dialog-close{margin-top:10px;width:100%;border:0;border-radius:8px;background:#e8eddf;padding:10px;font-size:12px}.loading-cover{position:absolute;inset:0;display:grid;place-items:center;background:#f1f3e8df;z-index:5;transition:opacity .3s}.loading-cover.hide{opacity:0;pointer-events:none}.loading-cover span{font-size:12px;color:#82926f}.loading-cover span::before{content:"";display:block;width:24px;height:24px;border:2px solid #dfe5d5;border-top-color:var(--accent);border-radius:50%;margin:0 auto 14px;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{opacity:.35}}@keyframes enter{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}.controls,.main{animation:enter .5s ease both}.main{animation-delay:.08s}
+@media(min-width:1600px){.workspace{grid-template-columns:330px minmax(0,1fr);gap:32px;padding-top:32px}.control-scroll{padding:0 25px}.control-section{padding:24px 0}.stage{min-height:480px}.image-wrap{height:150px}}
+@media(max-width:1150px){.workspace{padding:21px 22px;gap:20px;grid-template-columns:278px minmax(0,1fr)}.control-scroll{padding:0 17px}.stage{height:440px}.bottom-grid{gap:10px;grid-template-columns:1fr 1fr}.model-stats{gap:15px}.mesh-note{display:none}.brand-name span{display:none}.stage-instructions{font-size:8px}}
+@media(max-width:800px){.app-header{padding:0 18px;height:65px}.workspace{padding:18px;gap:18px;grid-template-columns:242px minmax(0,1fr)}.control-scroll{padding:0 14px}.stage{min-height:380px;height:420px}.stage-instructions{display:none}.preview-toolbar{padding:0 10px}.mode-tab{padding:7px 9px;font-size:10px;gap:5px}.live-state{font-size:9px}.model-stats{gap:10px;flex-wrap:wrap}.stat-value{margin-left:3px;font-size:10px}.preview-footer{padding:11px 12px}.stage-caption{left:17px}.stage-tools{right:12px}.image-wrap{height:104px}.image-card-foot{font-size:8px;padding:7px}.controls{min-height:680px;height:calc(100dvh - 105px)}.material-picker{gap:5px}.material-picker span{display:none}}
+@media(max-width:620px){.app-header{height:62px;gap:8px}.brand-mark{width:30px;height:34px}.brand-mark svg{width:22px;height:25px}.brand{gap:9px}.brand-name{font-size:20px}.brand-name span{display:inline;font-size:8px;margin-left:6px;letter-spacing:1.2px}.header-right{gap:10px}.workspace{display:flex;flex-direction:column;padding:18px 13px;gap:20px}.main{order:0}.controls{order:1;min-height:0;max-height:none;height:auto;overflow:visible}.control-scroll{overflow:visible;padding:0 20px}.control-section{padding:20px 0}.stage{height:370px;min-height:370px}.preview-toolbar{height:50px;padding:0 12px}.mode-tab{font-size:11px;padding:7px 12px}.stage-caption{top:16px}.stage-caption p{font-size:9px}.stage-bottom{left:15px;right:15px}.preview-footer{padding:11px 14px}.model-stats{width:100%;justify-content:space-between;gap:8px}.stat-label{font-size:8px}.stat-value{font-size:10px}.image-wrap{height:110px}.card-title{height:35px}.bottom-grid{margin-top:12px}.export-area{position:sticky;bottom:0;border-radius:0 0 16px 16px;z-index:10;background:#fffffff5;padding:13px 20px 10px;backdrop-filter:blur(12px)}.two-fields{gap:25px}.field{margin-bottom:16px}.field-label,.check-row,select{font-size:12px}.value-input input{width:64px;font-size:12px}.two-fields .value-input input{width:53px}.field-hint{font-size:11px}.drop-zone{padding:20px}.drop-title{font-size:13px}.section-label{font-size:13px}.export-button{font-size:13px}.toast{bottom:18px}.control-scroll .control-section:nth-child(2){border-bottom:1px solid var(--line)}}
+.loading-cover.hide{visibility:hidden}
+.output-folder-button{width:100%;margin-top:8px;border:1px solid #e2e6dc;border-radius:8px;background:#fff;padding:8px;font-size:11px;color:#6d7c61;gap:7px;justify-content:center}.output-folder-button:not([hidden]){display:flex;align-items:center}.output-folder-button svg{width:15px;height:15px}.output-folder-button:hover{background:#f3f6ed;border-color:#c9d3bf}
+.export-secondary{width:100%;margin-top:8px;border:1px solid #dce3d3;border-radius:8px;background:#f8faf3;padding:8px;font-size:11px;color:#61764f}.export-secondary:hover{background:#edf2e4}.topology-note{padding:9px 10px;background:#f4f6ee;border:1px solid #e6ebdd;border-radius:8px;margin:11px 0;font-size:10px;line-height:1.9;color:#82916e}.mesh-summary{font-size:10px;line-height:1.9;color:#8b977d;margin:10px 0 0}.mesh-summary strong{font-family:Consolas,monospace;font-weight:500;color:#5b744a}.adaptive-field:has(input:disabled){opacity:.45}.model-stats{gap:17px;flex-wrap:wrap}.mesh-note{white-space:nowrap}.preview-grid-note{padding:8px 18px;background:#f4f7ee;border-top:1px solid #e2e8d9;color:#8b997c;font-size:9px;line-height:1.7}.density-presets{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:13px}.density-presets button{flex:1;min-width:35px;padding:5px 3px;border:1px solid #e1e6d8;border-radius:5px;background:#fcfdf9;color:#879575;font:10px Consolas,monospace}.density-presets button.active{border-color:#c69e79;background:#faf0e5;color:#b16a40}
+.import-tools{display:flex;align-items:center;gap:10px}.import-tools .quiet-button{white-space:nowrap}.drop-zone.has-image{padding:0;overflow:hidden;border-style:solid;border-color:#dde2d5}.drop-zone.has-image .drop-empty{display:none}.import-preview{display:block;width:100%;height:157px;object-fit:contain;background-color:#f4f5ef;background-image:linear-gradient(45deg,#e0e5d850 25%,transparent 25%),linear-gradient(-45deg,#e0e5d850 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e0e5d850 75%),linear-gradient(-45deg,transparent 75%,#e0e5d850 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0}.import-image-action{display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 5px;background:#ffffffef;border-top:1px solid #e7ebde;font-size:10px;color:#78856c}.import-image-action svg{width:13px;height:13px}.paste-hint{margin:8px 0 0;font-size:9px;line-height:1.8;color:#939c89}.paste-hint kbd{font:9px Consolas,monospace;border:1px solid #e1e6d8;background:#fafbf7;border-radius:4px;padding:1px 4px}
+@media(max-width:380px){.brand-name span{display:none}.preview-toolbar{padding:0 8px}.mode-tab{padding:7px 8px;gap:5px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+.workspace-toggle{display:inline-flex;align-items:center;gap:7px;border:1px solid #cfd6c7;border-radius:8px;background:#fafbf7;padding:8px 12px;font-size:12px;color:#536649}.workspace-toggle svg{width:17px;height:17px}.workspace-toggle[aria-pressed=true]{background:#263d32;color:#f7f1e5;border-color:#263d32}.depth-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.depth-actions button{min-width:0;padding:9px 5px;border:1px solid #dce2d4;border-radius:7px;background:#fafbf7;font-size:11px}.depth-actions .depth-generate{background:var(--green);border-color:var(--green);color:white}.depth-status{font-size:10px;line-height:1.8;color:#849077;margin:8px 0 12px;min-height:18px}.depth-status[data-state=error]{color:#ae5332}.depth-progress{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0}.depth-progress span{font-size:11px;color:#53735a}.depth-progress span::before{content:"";display:inline-block;width:9px;height:9px;border:1px solid #b2c0a7;border-top-color:#53735a;border-radius:50%;margin-right:7px;animation:spin 1s linear infinite}.medal-preview-title{display:flex;align-items:center;gap:8px;font-size:12px;color:#536649}.medal-preview-title svg{width:18px;height:18px}.medal-fieldset{margin-top:14px}.depth-empty{position:absolute;inset:0;background:#eef1e8ee;display:grid;place-items:center;text-align:center;padding:28px;color:#738368;font-size:12px;line-height:1.9;z-index:2}.depth-empty button{display:block;margin:12px auto 0;background:#53735a;color:white;border:0;border-radius:8px;padding:10px 18px}.depth-card-empty{position:absolute;inset:0;display:grid;place-items:center;background:#eef1e8;color:#86927c;font-size:11px}.image-wrap{position:relative}.depth-options{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}.depth-options .check-row{font-size:10px}.depth-status:empty{display:none}
+@media(max-width:600px){.header-right{gap:8px}.workspace-toggle{font-size:11px;padding:7px 9px}.brand-name span{display:none}}
+[hidden]{display:none!important}
+</style>
+<script src="./web-bridge.js"></script></head>
+<body>
+<svg class="icon-defs" aria-hidden="true"><defs>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></symbol>
+<symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m3 16 5-5 5 5 3-3 5 5"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 3 8 3v5c0 5-5 9-8 10-3-1-8-5-8-10V6l8-3Z"/><path d="m8 12 3 3 5-6"/></symbol>
+<symbol id="i-flat" viewBox="0 0 24 24"><path d="m3 14 9-5 9 5-9 5-9-5Zm0-4 9-5 9 5M3 14v4l9 5 9-5v-4"/></symbol>
+<symbol id="i-cylinder" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 4 16 4 16 0V5"/><ellipse cx="12" cy="5" rx="4" ry="1.4"/></symbol>
+<symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 2 9M3 4v6h6"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 8a2.5 2.5 0 1 1 4.6 1.4c-.7.9-2.1 1.1-2.1 3.1M12 16h.01"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><path d="m3 7 9-4 9 4v10l-9 4-9-4V7Zm0 0 9 4 9-4M12 11v10M7.5 5l9 4v10M16.5 5l-9 4v10M3 12l9 4 9-4"/></symbol>
+<symbol id="i-fit" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m8 0h5v-5M8 8h8v8H8z"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+<symbol id="i-medal" viewBox="0 0 24 24"><circle cx="12" cy="11" r="8"/><circle cx="12" cy="11" r="5"/><path d="m7 18-1 4 6-2 6 2-1-4"/></symbol>
+</defs></svg>
+<header class="app-header">
+  <div class="brand"><div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 30 34"><path d="m3 13 12-8 12 8-12 8L3 13Zm0 5 12 8 12-8M3 23l12 8 12-8M8 10l7-5 7 5M15 21v10"/></svg></div><div class="brand-name">浮光<span>RELIEF LAB</span></div></div>
+  <div class="header-right"><button class="workspace-toggle" id="workspace-toggle" aria-pressed="false"><svg><use href="#i-medal"/></svg><span id="workspace-toggle-label">纪念章模式</span></button><button class="icon-button" id="help-button" aria-label="使用说明" title="使用说明"><svg><use href="#i-help"/></svg></button></div>
+</header>
+<div class="workspace">
+<aside class="controls" aria-label="图像和模型参数">
+  <div class="control-scroll">
+    <section class="control-section">
+      <h2 class="section-label"><span><span class="number">01 /</span>导入图像</span><span class="import-tools"><button id="paste-button" class="quiet-button" title="导入剪贴板中的截图或图片文件（Ctrl+V）">粘贴图片</button><button id="sample-button" class="quiet-button">载入示例</button></span></h2>
+      <button class="drop-zone" id="drop-zone" aria-label="选择或更换图片，也可以拖入或按 Ctrl+V 粘贴">
+        <span class="drop-empty"><span class="upload-icon"><svg><use href="#i-upload"/></svg></span><span class="drop-title">将图片拖到这里，或<em>点击上传</em></span><span class="drop-sub">PNG / JPG / WEBP / BMP · 最大 30 MB</span></span>
+        <canvas id="import-preview" class="import-preview" aria-label="当前导入图片的缩略预览" hidden></canvas>
+        <span class="import-image-action" id="import-image-action" hidden><svg><use href="#i-image"/></svg>点击更换 · 拖入或 Ctrl+V 粘贴</span>
+      </button>
+      <input type="file" id="file-input" accept="image/png,image/jpeg,image/webp,image/bmp,image/gif,image/avif" hidden>
+      <div class="file-line"><svg><use href="#i-check"/></svg><span class="file-name" id="file-name">正在准备示例…</span><span class="tag" id="source-tag">示例</span></div>
+      <p class="paste-hint">在界面任意位置按 <kbd>Ctrl</kbd> + <kbd>V</kbd> 导入截图或复制的图片。</p>
+    </section>
+    <section class="control-section" id="medal-depth-section" hidden>
+      <h2 class="section-label"><span><span class="number">02 /</span>形体深度图</span><button class="quiet-button" id="reset-depth-effects">重置效果</button></h2>
+      <div class="field"><label for="depth-quality" class="field-label">生成精度</label><select id="depth-quality"><option value="392">标准 · 更快</option><option value="518" selected>精细 · 更多形体细节</option></select></div>
+      <div class="depth-actions"><button class="depth-generate" id="generate-depth">生成 AI 深度图</button><button id="import-depth">导入已有深度图</button></div>
+      <input type="file" id="depth-file-input" accept="image/png,image/jpeg,image/webp,image/bmp" hidden>
+      <div class="depth-progress" id="depth-progress" hidden><span id="depth-progress-label">正在生成形体深度</span><button class="quiet-button" id="cancel-depth">取消</button></div>
+      <p class="depth-status" id="depth-status" role="status">导入照片后生成，或载入与原图对齐的深度图。</p>
+      <div class="field" data-control="depthVolume" data-label="形体强度" data-unit="%" data-min="0" data-max="150" data-step="1" data-value="100"></div>
+      <div class="field" data-control="depthCurve" data-label="深度层次曲线" data-min="0.35" data-max="2.5" data-step="0.05" data-value="1"></div>
+      <div class="field" data-control="depthSmooth" data-label="保边平滑" data-unit="%" data-min="0" data-max="100" data-step="1" data-value="25"></div>
+      <div class="field" data-control="depthDetail" data-label="纹理细节" data-unit="%" data-min="0" data-max="60" data-step="1" data-value="8"></div>
+      <div class="field" data-control="depthFloor" data-label="背景压平" data-unit="%" data-min="0" data-max="80" data-step="1" data-value="8"></div>
+      <div class="depth-options"><label class="check-row"><input type="checkbox" id="depth-invert">反转深度</label><label class="check-row"><input type="checkbox" id="depth-mirror">水平镜像</label></div>
+      <label class="check-row"><input type="checkbox" id="black-background" checked>边缘相连的黑色 / 透明背景归零</label>
+      <div class="depth-legend" aria-hidden="true"></div><div class="legend-labels"><span>黑色 → 低</span><span>白色 → 高</span></div>
+    </section>
+    <section class="control-section" id="normal-depth-section">
+      <h2 class="section-label"><span><span class="number">02 /</span>雕刻深度</span><button class="quiet-button" id="reset-image">还原图像</button></h2>
+      <div class="field"><label class="sr-only" for="depth-mode">深度转换方式</label><select id="depth-mode"><option value="grayscale">连续灰度 · 保留细节</option><option value="threshold">黑白阈值 · 双层高度</option></select></div>
+      <div class="field" data-control="brightness" data-label="亮度" data-min="-80" data-max="80" data-step="1" data-value="0"></div>
+      <div class="field" data-control="contrast" data-label="对比度" data-min="-90" data-max="90" data-step="1" data-value="0"></div>
+      <div class="field" id="threshold-field" data-control="threshold" data-label="黑白阈值" data-min="1" data-max="254" data-step="1" data-value="128" hidden></div>
+      <div class="checks"><label class="check-row"><input type="checkbox" id="invert">反转黑白</label><label class="check-row"><input type="checkbox" id="mirror">水平镜像</label></div>
+      <div class="depth-legend" aria-hidden="true"></div><div class="legend-labels"><span>黑色 → 低</span><span>白色 → 高</span></div>
+      <details class="advanced"><summary>更多图像调整</summary>
+        <div class="field" data-control="gamma" data-label="灰度伽马" data-min="0.3" data-max="3" data-step="0.05" data-value="1"></div>
+        <div class="field" data-control="blur" data-label="平滑去噪" data-unit="px" data-min="0" data-max="8" data-step="1" data-value="1"></div>
+        <p class="field-hint">平滑先于阈值处理。反转将同时改变深度图与模型，白色始终对应更高的位置。</p>
+      </details>
+    </section>
+    <section class="control-section">
+      <h2 class="section-label"><span><span class="number">03 /</span>模型设置</span><span style="display:flex;align-items:center;gap:9px"><button class="quiet-button" id="reset-model" title="还原模型尺寸、厚度、网格密度与布线参数">重置</button><span class="tag">单位 mm</span></span></h2>
+      <div class="preset-row" id="normal-model-presets"><button class="preset-button" id="preset-relief">浮雕推荐</button><button class="preset-button" id="preset-lamp">透光灯罩推荐</button></div>
+      <div id="medal-fields" hidden>
+        <div class="field"><label for="medal-shape" class="field-label">章坯形状</label><select id="medal-shape"><option value="round">圆形纪念章</option><option value="square">方形纪念章</option></select></div>
+        <div class="field" data-control="medalDiameter" data-label="章坯直径 / 边长" data-unit="mm" data-min="20" data-max="300" data-step="1" data-value="80"></div>
+        <div class="two-fields">
+          <div class="field" data-control="rimWidth" data-label="边框宽度" data-unit="mm" data-min="0" data-max="12" data-step="0.1" data-value="2"></div>
+          <div class="field" data-control="rimHeight" data-label="边框凸高" data-unit="mm" data-min="0" data-max="5" data-step="0.1" data-value="0.8"></div>
+        </div>
+        <details class="advanced"><summary>图像位置</summary>
+          <div class="field" data-control="photoScale" data-label="图像缩放" data-unit="%" data-min="25" data-max="200" data-step="1" data-value="90"></div>
+          <div class="two-fields">
+            <div class="field" data-control="photoX" data-label="水平位置" data-unit="%" data-min="-80" data-max="80" data-step="1" data-value="0"></div>
+            <div class="field" data-control="photoY" data-label="垂直位置" data-unit="%" data-min="-80" data-max="80" data-step="1" data-value="0"></div>
+          </div>
+        </details>
+      </div>
+      <div id="flat-fields">
+        <div class="two-fields">
+          <div class="field" data-control="width" data-label="宽度" data-unit="mm" data-min="10" data-max="400" data-step="1" data-value="120"></div>
+          <div class="field" data-control="height" data-label="高度" data-unit="mm" data-min="10" data-max="400" data-step="1" data-value="90"></div>
+        </div>
+        <label class="check-row dimension-lock"><input type="checkbox" id="aspect-lock" checked>锁定图片宽高比</label>
+      </div>
+      <div id="cylinder-fields" hidden>
+        <div class="two-fields">
+          <div class="field" data-control="diameter" data-label="圆柱内径" data-unit="mm" data-min="10" data-max="300" data-step="1" data-value="72"></div>
+          <div class="field" data-control="cylinderHeight" data-label="壳体高度" data-unit="mm" data-min="10" data-max="400" data-step="1" data-value="90"></div>
+        </div>
+        <div class="field" data-control="arc" data-label="包裹角度" data-unit="°" data-min="60" data-max="360" data-step="1" data-value="360"></div>
+        <div class="field" id="seam-field" data-control="seam" data-label="接缝过渡" data-unit="%" data-min="0" data-max="20" data-step="1" data-value="8"></div>
+        <p class="field-hint" id="cylinder-hint">内壁光滑，图像向外浮雕；上下开口，壁厚边缘封口。图片水平环绕一周。</p>
+      </div>
+      <div class="field" data-control="base" data-label="最小底厚" data-unit="mm" data-min="0.4" data-max="10" data-step="0.1" data-value="1.6"></div>
+      <div class="field" data-control="relief" data-label="起伏高度" data-unit="mm" data-min="0" data-max="20" data-step="0.1" data-value="6"></div>
+    </section>
+    <section class="control-section" id="topology-section">
+      <h2 class="section-label"><span><span class="number">04 /</span>网格与布线</span><button class="quiet-button" id="preset-mesh" title="应用适合图片浮雕的高密度与抗锯齿参数">抗锯齿推荐</button></h2>
+      <div class="field"><label for="topology" class="field-label">拓扑方式</label><select id="topology"><option value="adaptive" selected>特征自适应四边形</option><option value="uniform">均匀四边形 · 规则网格</option></select></div>
+      <div class="field" data-control="density" data-label="网格密度（最长方向）" data-unit="段" data-min="32" data-max="768" data-step="1" data-value="192"></div>
+      <div class="density-presets" aria-label="网格密度预设"><button data-density="96">96</button><button class="active" data-density="192">192</button><button data-density="320">320</button><button data-density="512">512</button><button data-density="768">768</button></div>
+      <div class="field adaptive-field" data-control="adaptivity" data-label="自适应强度" data-unit="%" data-min="0" data-max="100" data-step="1" data-value="65"></div>
+      <div class="field adaptive-field" data-control="relax" data-label="布线松弛" data-unit="次" data-min="0" data-max="12" data-step="1" data-value="4"></div>
+      <div class="field" data-control="surfaceSmooth" data-label="几何表面平滑" data-unit="%" data-min="0" data-max="100" data-step="1" data-value="0"></div>
+      <p class="topology-note" id="topology-description">根据深度变化重新分配四边形：细节处加密，平缓处放疏，并沿轮廓弯曲网格列。适用于本程序生成的高度场。</p>
+      <div class="two-fields">
+        <div class="field"><label for="preview-detail" class="field-label">预览精度</label><select id="preview-detail"><option value="160" selected>轻量 · 160</option><option value="320">精细 · 320</option><option value="0">与导出一致</option></select></div>
+        <div class="field"><label for="wire-mode" class="field-label">线框显示</label><select id="wire-mode"><option value="quad" selected>四边形布线</option><option value="triangle">STL 三角面</option></select></div>
+      </div>
+      <p class="mesh-summary" id="mesh-summary">正在计算网格…</p>
+      <p class="field-hint">STL 保存三角面；OBJ 保留四边形。几何平滑只影响模型，不改变深度图。密度越高，文件越大。</p>
+    </section>
+  </div>
+  <div class="export-area"><button class="export-button" id="export-button" disabled><svg><use href="#i-download"/></svg><span id="export-label">导出 STL 模型</span></button><button class="export-secondary" id="export-obj" disabled>导出四边形 OBJ</button><button class="output-folder-button" id="open-output-folder" hidden><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M3 10h18"/></svg>打开输出文件夹</button><div class="export-note"><span>封闭网格</span><span>毫米尺寸</span><span id="export-estimate">准备中</span></div></div>
+</aside>
+<main class="main">
+  <section class="preview-panel" aria-label="三维模型预览">
+    <div class="preview-toolbar">
+      <div class="mode-tabs" id="normal-shape-tabs" role="tablist" aria-label="模型形状"><button class="mode-tab active" data-mode="flat" role="tab" aria-selected="true"><svg><use href="#i-flat"/></svg>平面浮雕</button><button class="mode-tab" data-mode="cylinder" role="tab" aria-selected="false"><svg><use href="#i-cylinder"/></svg>圆柱壳体</button></div>
+      <div class="medal-preview-title" id="medal-preview-title" hidden><svg><use href="#i-medal"/></svg><span id="medal-shape-label">圆形纪念章</span></div>
+      <div class="live-state" id="live-state" role="status"><span class="status-dot"></span><span id="live-label">准备模型</span></div>
+    </div>
+    <div class="stage" id="stage">
+      <canvas id="model-canvas" tabindex="0" aria-label="三维模型。拖动旋转，滚轮缩放，双击复位，也可用方向键旋转、加减键缩放。"></canvas>
+      <div class="stage-caption"><h2 id="model-caption">山峦 · 平面浮雕</h2><p id="dimensions">120 × 90 mm</p></div>
+      <div class="stage-tools"><button class="icon-button" id="wire-button" aria-label="显示网格" aria-pressed="false" title="显示 / 隐藏网格"><svg><use href="#i-grid"/></svg></button><button class="icon-button" id="fit-button" aria-label="复位三维视角" title="复位视角（双击模型）"><svg><use href="#i-fit"/></svg></button></div>
+      <div class="stage-bottom"><div class="axis-widget" aria-hidden="true"><svg viewBox="0 0 42 42"><path d="M17 25V6" stroke="#a27c5d"/><path d="m17 25 17 8" stroke="#7d9275"/><path d="M17 25 4 34" stroke="#8b9ca0"/><text x="15" y="5" fill="#a27c5d" stroke="none" font-size="7">Z</text><text x="35" y="36" fill="#7d9275" stroke="none" font-size="7">X</text><text x="0" y="41" fill="#8b9ca0" stroke="none" font-size="7">Y</text></svg><span>透视视图</span></div><div class="stage-instructions">拖动旋转<span>/</span>滚轮缩放<span>/</span>双击复位</div><div class="material-picker" aria-label="预览材质"><span>材质</span><button class="active" data-material="sand" style="--swatch:#cbb38d" title="砂岩" aria-label="砂岩材质" aria-pressed="true"></button><button data-material="chalk" style="--swatch:#e3e2d7" title="石膏" aria-label="石膏材质" aria-pressed="false"></button><button data-material="sage" style="--swatch:#8ca08a" title="青石" aria-label="青石材质" aria-pressed="false"></button></div></div>
+      <div class="webgl-fallback" id="webgl-fallback">当前浏览器未启用 WebGL，无法显示三维预览。<br>图片处理和 STL 导出仍可使用。<br>可在浏览器设置中开启硬件加速后重新打开。</div>
+      <div class="loading-cover" id="loading-cover"><span>正在雕刻第一束光…</span></div>
+      <div class="depth-empty" id="depth-empty" hidden><div>生成形体深度图后预览纪念章<button id="empty-generate-depth">生成 AI 深度图</button></div></div>
+    </div>
+    <div class="preview-footer"><div class="model-stats"><div><span class="stat-label">四边形</span><span class="stat-value" id="quad-count">—</span></div><div><span class="stat-label">STL 三角面</span><span class="stat-value" id="triangle-count">—</span></div><div><span class="stat-label">STL 大小</span><span class="stat-value" id="file-size">—</span></div><div><span class="stat-label" id="thickness-label">厚度范围</span><span class="stat-value" id="thickness-range">—</span></div></div><div class="mesh-note"><svg><use href="#i-shield"/></svg>封闭网格</div></div>
+    <div class="preview-grid-note" id="preview-grid-note">预览与导出网格信息将在这里显示。</div>
+  </section>
+  <div class="bottom-grid">
+    <section class="image-card" aria-label="原始图像"><div class="card-title"><span><span class="card-num">01</span>原始图像</span><svg style="width:13px;height:13px;color:#9da890"><use href="#i-image"/></svg></div><div class="image-wrap"><canvas id="original-canvas" aria-label="导入图片预览"></canvas></div><div class="image-card-foot"><span id="image-dimensions">512 × 384 px</span><span>本机读取</span></div></section>
+    <section class="image-card" aria-label="黑白深度图"><div class="card-title"><span><span class="card-num">02</span><span id="depth-card-title">黑白深度图</span></span><button class="quiet-button" id="download-depth" aria-label="下载深度图 PNG" title="下载深度图 PNG"><svg><use href="#i-download"/></svg></button></div><div class="image-wrap"><canvas id="depth-canvas" aria-label="深度图：黑色低，白色高"></canvas><div class="depth-card-empty" id="depth-card-empty" hidden>等待生成 / 导入深度图</div></div><div class="image-card-foot"><span id="depth-mode-label">连续灰度</span><span>黑低 · 白高</span></div></section>
+  </div>
+</main>
+</div>
+<div class="global-drop" id="global-drop"><div><svg><use href="#i-upload"/></svg>松开鼠标，让图像成形</div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<dialog id="help-dialog">
+  <div class="dialog-head"><h2>从图像到网格，逐步成形。</h2><button class="icon-button" id="close-help" aria-label="关闭说明"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+  <ol>
+    <li><strong>导入图片：</strong>点击上传、拖入图片，或在界面任意位置按 <kbd>Ctrl</kbd> + <kbd>V</kbd> 粘贴截图；桌面版也支持在资源管理器中复制图片文件后粘贴。导入区直接显示当前图片的缩略预览，点击可更换。大图片先缩放到最长边 1600 px。</li>
+    <li><strong>调整深度：</strong>普通模式中，连续灰度保留层次，黑白阈值产生两个高度。纪念章模式使用 AI 形体深度或导入已有深度图；形体强度、层次曲线、保边平滑、纹理细节和背景压平可分别调整。黑色对应最小底厚，白色对应更高的章面。</li>
+    <li><strong>选择形状：</strong>平面模式生成带平底的浮雕。圆柱模式以内径为基准向外增加壁厚，上下开口，壁厚边缘封口；小于 360° 时生成弧形壳体，并封闭左右截面。</li>
+    <li><strong>调整布线：</strong>网格密度可设为 32～768 段。普通平面、圆柱和方形章使用均匀或特征自适应四边形；圆形章使用圆周分段与同心环径向布线，外圈保持真圆。自适应强度控制细节处的加密程度，布线松弛让相邻网格列衔接更平顺。</li>
+    <li><strong>检查与导出：</strong>打开预览右上角的网格按钮，在“四边形布线 / STL 三角面”间切换。预览默认简化为 160 段；选择“预览精度 → 与导出一致”可检查实际导出布线。STL 用于切片打印；OBJ 保留四边形，适合继续编辑。两者均按毫米尺寸、Z 向上生成。</li>
+  </ol>
+  <p>右上角可切换“纪念章模式”。AI 形体深度使用本机内置的 Depth Anything V2 Small 模型，从单张照片估计相对空间深度，并保持完全离线。圆章默认设置可直接导出；章坯直径、边框、图像位置、底厚、起伏与网格密度均可调整。也可导入与原图宽高比一致的黑白深度图。</p>
+  <p>AI 深度是估计结果，不会恢复照片中不存在的侧面、背面或精确解剖结构；复杂头发、遮挡和反光处可能需要用已有深度图替换或微调。自适应布线专用于本程序的图片高度场，不是完整的 ZRemesher，也不支持导入任意三维模型重拓扑。密度提高会增大文件和计算量。</p>
+  <p>深度 PNG 保存图像处理结果。几何平滑与 360° 接缝过渡仅在建模时应用，不改变 PNG。接缝过渡会柔化图片左右边缘；透光灯罩推荐会反转灰度，使原图明亮处壁厚更薄。STL 和 OBJ 均不保存单位，导入时选择毫米。</p>
+  <p>拖动模型旋转，按住 <kbd>Shift</kbd> 拖动平移，滚轮缩放；触屏支持双指缩放。图片与模型计算均在本机完成。</p>
+  <button class="dialog-close" id="got-it">开始创作</button>
+</dialog>
+<script id="geometry-core">
+"use strict";
+function createReliefCore() {
+  const clamp = (v, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
+  function smoothField(input, w, h, radius) {
+    if (!radius) return input;
+    const temp = new Float32Array(input.length), out = new Float32Array(input.length);
+    const n = radius * 2 + 1;
+    for (let y = 0; y < h; y++) {
+      let sum = 0;
+      for (let k = -radius; k <= radius; k++) sum += input[y * w + clamp(k, 0, w - 1)];
+      for (let x = 0; x < w; x++) {
+        temp[y * w + x] = sum / n;
+        sum += input[y * w + clamp(x + radius + 1, 0, w - 1)] - input[y * w + clamp(x - radius, 0, w - 1)];
+      }
+    }
+    for (let x = 0; x < w; x++) {
+      let sum = 0;
+      for (let k = -radius; k <= radius; k++) sum += temp[clamp(k, 0, h - 1) * w + x];
+      for (let y = 0; y < h; y++) {
+        out[y * w + x] = sum / n;
+        sum += temp[clamp(y + radius + 1, 0, h - 1) * w + x] - temp[clamp(y - radius, 0, h - 1) * w + x];
+      }
+    }
+    return out;
+  }
+  function process(pixels, w, h, p) {
+    let field = new Float32Array(w * h);
+    const contrast = Math.pow(2, p.contrast / 45), brightness = p.brightness / 100;
+    for (let i = 0; i < field.length; i++) {
+      const j = i * 4, a = pixels[j + 3] / 255;
+      const luminance = ((0.2126 * pixels[j] + 0.7152 * pixels[j + 1] + 0.0722 * pixels[j + 2]) / 255) * a + 1 - a;
+      field[i] = Math.pow(clamp((luminance - 0.5) * contrast + 0.5 + brightness), 1 / p.gamma);
+    }
+    field = smoothField(field, w, h, Math.round(p.blur));
+    let min = 1, max = 0;
+    for (let y = 0; y < h; y++) {
+      if (p.mirror) {
+        for (let x = 0; x < Math.floor(w / 2); x++) {
+          const a = y * w + x, b = y * w + w - 1 - x, v = field[a];
+          field[a] = field[b]; field[b] = v;
+        }
+      }
+      for (let x = 0; x < w; x++) {
+        const i = y * w + x;
+        let value = clamp(field[i]);
+        if (p.depthMode === "threshold") value = value >= p.threshold / 255 ? 1 : 0;
+        if (p.invert) value = 1 - value;
+        field[i] = value; min = Math.min(min, value); max = Math.max(max, value);
+      }
+    }
+    return { field, w, h, min, max };
+  }
+  function processDepth(depth, source, p) {
+    const scale = Math.min(1, 1024 / Math.max(source.w, source.h));
+    const w = Math.max(1, Math.round(source.w * scale)), h = Math.max(1, Math.round(source.h * scale));
+    let field = new Float32Array(w * h);
+    const light = new Float32Array(w * h), mask = new Uint8Array(w * h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const i = y * w + x, u = w > 1 ? x / (w - 1) : .5, v = h > 1 ? y / (h - 1) : .5;
+      field[i] = sample(depth, u, v);
+      const j = (Math.round(v * (source.h - 1)) * source.w + Math.round(u * (source.w - 1))) * 4;
+      light[i] = (source.pixels[j] * .2126 + source.pixels[j + 1] * .7152 + source.pixels[j + 2] * .0722) / 255;
+      mask[i] = light[i] < .065 || source.pixels[j + 3] < 24 ? 1 : 0;
+    }
+    const smooth = clamp((p.depthSmooth ?? 25) / 100);
+    if (smooth) {
+      // Self-guided filtering smooths noise without using photo shading as geometry.
+      const radius = Math.max(1, Math.round(Math.max(w, h) / 160));
+      const mean = smoothField(field, w, h, radius), squared = Float32Array.from(field, x => x * x);
+      const corr = smoothField(squared, w, h, radius), a = new Float32Array(field.length), b = new Float32Array(field.length);
+      for (let i = 0; i < field.length; i++) {
+        const variance = Math.max(0, corr[i] - mean[i] * mean[i]);
+        a[i] = variance / (variance + .0006); b[i] = mean[i] * (1 - a[i]);
+      }
+      const ma = smoothField(a, w, h, radius), mb = smoothField(b, w, h, radius);
+      field = Float32Array.from(field, (x, i) => x * (1 - smooth) + (ma[i] * x + mb[i]) * smooth);
+    }
+    const detail = clamp((p.depthDetail ?? 8) / 100), blurred = detail ? smoothField(light, w, h, Math.max(1, Math.round(Math.max(w, h) / 200))) : null;
+    const background = new Uint8Array(field.length);
+    if (p.blackBackground) {
+      // Only flood-fill dark pixels connected to the image border; dark interior details remain.
+      const queue = new Uint32Array(field.length); let read = 0, write = 0;
+      const visit = i => { if (mask[i] && !background[i]) { background[i] = 1; queue[write++] = i; } };
+      for (let x = 0; x < w; x++) { visit(x); visit((h - 1) * w + x); }
+      for (let y = 0; y < h; y++) { visit(y * w); visit(y * w + w - 1); }
+      while (read < write) {
+        const i = queue[read++], x = i % w;
+        if (x) visit(i - 1); if (x + 1 < w) visit(i + 1);
+        if (i >= w) visit(i - w); if (i + w < field.length) visit(i + w);
+      }
+    }
+    const floor = clamp((p.depthFloor ?? 8) / 100, 0, .8), volume = clamp((p.depthVolume ?? 100) / 100, 0, 1.5);
+    let min = 1, max = 0;
+    for (let i = 0; i < field.length; i++) {
+      let value = p.invert ? 1 - field[i] : field[i];
+      value = clamp((value - floor) / (1 - floor));
+      if (floor) value *= Math.min(1, value / .035);
+      value = Math.pow(value, 1 / (p.depthCurve || 1)) * volume;
+      if (detail) value += (light[i] - blurred[i]) * detail * Math.min(1, value * 12);
+      field[i] = background[i] ? 0 : clamp(value);
+      min = Math.min(min, field[i]); max = Math.max(max, field[i]);
+    }
+    if (p.mirror) for (let y = 0; y < h; y++) for (let x = 0; x < Math.floor(w / 2); x++) {
+      const a = y * w + x, b = y * w + w - 1 - x, value = field[a]; field[a] = field[b]; field[b] = value;
+    }
+    return { field, w, h, min, max };
+  }
+  function sample(data, u, v, nearest = false) {
+    const x = clamp(u) * (data.w - 1), y = clamp(v) * (data.h - 1);
+    if (nearest) return data.field[Math.round(y) * data.w + Math.round(x)];
+    const x0 = Math.floor(x), y0 = Math.floor(y), x1 = Math.min(x0 + 1, data.w - 1), y1 = Math.min(y0 + 1, data.h - 1);
+    const a = x - x0, b = y - y0;
+    return (data.field[y0 * data.w + x0] * (1 - a) + data.field[y0 * data.w + x1] * a) * (1 - b)
+      + (data.field[y1 * data.w + x0] * (1 - a) + data.field[y1 * data.w + x1] * a) * b;
+  }
+  function plan(p, resolution = p.density ?? p.quality ?? 192) {
+    resolution = clamp(Math.round(resolution), 16, 768);
+    if (p.mode === "medal" && p.medalShape === "round") {
+      const segments = Math.floor(resolution / 2) * 2, rings = segments / 2;
+      const vertices = (1 + segments * rings) * 2, triangles = 4 * segments * rings;
+      const quads = segments * (2 * rings - 1);
+      return { nx:segments, ny:rings, cols:segments + 1, vertices, triangles, quads, centerTriangles:segments * 2, bytes:84 + triangles * 50, cylinder:false, full:true, width:p.medalDiameter, height:p.medalDiameter, resolution, radial:true, segments, rings };
+    }
+    const cylinder = p.mode === "cylinder", full = cylinder && p.arc === 360;
+    const width = p.mode === "medal" ? p.medalDiameter : cylinder ? Math.PI * p.diameter * p.arc / 360 : p.width;
+    const height = p.mode === "medal" ? p.medalDiameter : cylinder ? p.cylinderHeight : p.height;
+    const longest = Math.max(width, height);
+    const segments = p.mode === "medal" ? Math.floor(resolution / 2) * 2 : resolution;
+    const nx = Math.max(cylinder ? (full ? 24 : 8) : 2, Math.round(segments * width / longest));
+    const ny = Math.max(2, Math.round(segments * height / longest));
+    const cols = full ? nx : nx + 1, vertices = cols * (ny + 1) * 2;
+    const triangles = 4 * nx * ny + 4 * nx + (full ? 0 : 4 * ny);
+    return { nx, ny, cols, vertices, triangles, quads:triangles / 2, bytes:84 + triangles * 50, cylinder, full, width, height, resolution };
+  }
+  function surfaceField(data, p) {
+    const amount = clamp((p.surfaceSmooth ?? 0) / 100);
+    if (!amount) return data;
+    const radius = clamp(Math.round(Math.max(data.w, data.h) / 250), 1, 6);
+    const blurred = smoothField(data.field, data.w, data.h, radius), field = new Float32Array(data.field.length);
+    for (let i = 0; i < field.length; i++) field[i] = data.field[i] * (1 - amount) + blurred[i] * amount;
+    return { ...data, field };
+  }
+  function medalXY(p, u, v) {
+    const x = u * 2 - 1, y = v * 2 - 1;
+    return p.medalShape === "square" ? [x, y] : [x * Math.sqrt(1 - y * y / 2), y * Math.sqrt(1 - x * x / 2)];
+  }
+  function smoothStep(a, b, x) { const t = clamp((x - a) / Math.max(1e-8, b - a)); return t * t * (3 - 2 * t); }
+  function medalSurface(data, p, x, y) {
+    const aspect = data.w / data.h, scale = (p.photoScale ?? 90) / 100;
+    const extentX = scale * Math.min(1, aspect), extentY = scale * Math.min(1, 1 / aspect);
+    const su = .5 + (x - (p.photoX || 0) / 50) / (2 * extentX);
+    const sv = .5 - (y - (p.photoY || 0) / 50) / (2 * extentY);
+    let value = su < 0 || su > 1 || sv < 0 || sv > 1 ? 0 : sample(data, su, sv);
+    const radius = p.medalShape === "square" ? Math.max(Math.abs(x), Math.abs(y)) : Math.hypot(x, y);
+    const distance = Math.max(0, (1 - radius) * p.medalDiameter / 2);
+    const rim = Math.min(p.rimWidth || 0, p.medalDiameter * .2), bevel = Math.min(.35, rim / 3);
+    value *= smoothStep(rim, rim + .7, distance);
+    const border = rim ? (p.rimHeight || 0) * smoothStep(0, bevel, distance) * (1 - smoothStep(rim - bevel, rim + bevel, distance)) : 0;
+    return (value * p.relief + border) / Math.max(p.relief, p.rimHeight || 0, 1);
+  }
+  function surfaceSample(data, p, u, v) {
+    if (p.mode === "medal") {
+      const [x, y] = medalXY(p, u, v);
+      return medalSurface(data, p, x, y);
+    }
+    const nearest = p.depthMode === "threshold" && !(p.surfaceSmooth > 0);
+    let height = sample(data, u, 1 - v, nearest);
+    if (p.mode === "cylinder" && p.arc === 360 && p.seam > 0) {
+      const extent = p.seam / 100, distance = Math.min(u, 1 - u);
+      if (distance < extent) {
+        const seam = (sample(data, 0, 1 - v, nearest) + sample(data, 1, 1 - v, nearest)) / 2;
+        const t = distance / extent, smooth = t * t * (3 - 2 * t);
+        height = seam * (1 - smooth) + height * smooth;
+      }
+    }
+    return height;
+  }
+  function quantiles(weights, count) {
+    const cdf = new Float64Array(weights.length);
+    for (let i = 1; i < weights.length; i++) cdf[i] = cdf[i - 1] + (weights[i - 1] + weights[i]) / 2;
+    const out = new Float32Array(count + 1), total = cdf[cdf.length - 1];
+    out[count] = 1;
+    let cell = 1;
+    for (let i = 1; i < count; i++) {
+      const target = total * i / count;
+      while (cell < cdf.length - 1 && cdf[cell] < target) cell++;
+      const fraction = (target - cdf[cell - 1]) / (cdf[cell] - cdf[cell - 1]);
+      out[i] = (cell - 1 + fraction) / (weights.length - 1);
+    }
+    return out;
+  }
+  function parameterGrid(data, p, info) {
+    const { nx, ny, cols, width, height } = info;
+    const u = new Float32Array(cols * (ny + 1)), v = new Float32Array(ny + 1);
+    for (let y = 0; y <= ny; y++) { v[y] = y / ny; for (let x = 0; x < cols; x++) u[y * cols + x] = x / nx; }
+    const strength = clamp((p.adaptivity ?? 65) / 100);
+    if (p.topology !== "adaptive" || !strength || !p.relief) return { u, v };
+    const longest = Math.max(width, height);
+    const w = Math.max(24, Math.round(224 * width / longest)), h = Math.max(24, Math.round(224 * height / longest));
+    const energy = new Float32Array(w * h);
+    let total = 0;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const a = x / (w - 1), b = y / (h - 1), du = 1 / (w - 1), dv = 1 / (h - 1);
+      const at = (s, t) => surfaceSample(data, p, clamp(s), clamp(t));
+      const center = at(a, b), left = at(a - du, b), right = at(a + du, b), down = at(a, b - dv), up = at(a, b + dv);
+      const value = Math.hypot(right - left, up - down) / 2 + 1.5 * Math.abs(left + right + down + up - 4 * center);
+      energy[y * w + x] = value; total += value;
+    }
+    if (total < 1e-7) return { u, v };
+    const filtered = smoothField(energy, w, h, 2), average = total / energy.length;
+    const importance = { field:new Float32Array(w * h), w, h }, rowWeights = new Float32Array(h);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const i = y * w + x;
+        importance.field[i] = 1 + 6 * strength * Math.min(1, Math.sqrt(filtered[i] / (average * 5 + 1e-9)));
+        rowWeights[y] += importance.field[i] / w;
+      }
+    }
+    v.set(quantiles(rowWeights, ny));
+    const line = new Float32Array(w);
+    for (let y = 0; y <= ny; y++) {
+      for (let x = 0; x < w; x++) line[x] = sample(importance, x / (w - 1), v[y]);
+      const distribution = quantiles(line, nx);
+      for (let x = 0; x < cols; x++) u[y * cols + x] = distribution[x];
+    }
+    // Relax whole monotone rows. Convex combinations preserve ordering and avoid folded UV cells.
+    const iterations = clamp(Math.round(p.relax ?? 4), 0, 12), temp = new Float32Array(u.length);
+    for (let pass = 0; pass < iterations; pass++) {
+      for (let y = 0; y <= ny; y++) for (let x = 0; x < cols; x++) {
+        const i = y * cols + x, up = Math.min(y + 1, ny) * cols + x, down = Math.max(y - 1, 0) * cols + x;
+        temp[i] = .58 * u[i] + .21 * (u[up] + u[down]);
+      }
+      u.set(temp);
+    }
+    return { u, v };
+  }
+  function mesh(data, p, resolution = p.density ?? p.quality ?? 192) {
+    const info = plan(p, resolution), { nx, ny, cols, vertices, triangles, cylinder, full } = info;
+    if (info.radial) return meshRoundMedal(data, p, info);
+    const layer = cols * (ny + 1), positions = new Float32Array(vertices * 3), levels = new Float32Array(vertices);
+    const indices = new Uint32Array(triangles * 3), quads = new Uint32Array(info.quads * 4), angle = p.arc * Math.PI / 180;
+    const bounds = { min:[Infinity, Infinity, Infinity], max:[-Infinity, -Infinity, -Infinity] };
+    data = surfaceField(data, p);
+    const grid = parameterGrid(data, p, info);
+    const get = (x, y, side = 0) => side * layer + y * cols + (x % cols);
+    let minThickness = Infinity, maxThickness = 0;
+    for (let y = 0; y <= ny; y++) {
+      const v = grid.v[y];
+      for (let x = 0; x < cols; x++) {
+        const u = grid.u[y * cols + x], height = surfaceSample(data, p, u, v);
+        const thickness = p.base + (p.mode === "medal" ? Math.max(p.relief, p.rimHeight || 0, 1) : p.relief) * height;
+        minThickness = Math.min(minThickness, thickness); maxThickness = Math.max(maxThickness, thickness);
+        for (let side = 0; side < 2; side++) {
+          const i = get(x, y, side), j = i * 3;
+          if (cylinder) {
+            const theta = u * angle - angle / 2, r = p.diameter / 2 + (side ? 0 : thickness);
+            positions[j] = Math.sin(theta) * r; positions[j + 1] = -Math.cos(theta) * r;
+            positions[j + 2] = v * p.cylinderHeight;
+          } else {
+            if (p.mode === "medal") {
+              const xy = medalXY(p, u, v);
+              positions[j] = xy[0] * p.medalDiameter / 2; positions[j + 1] = xy[1] * p.medalDiameter / 2;
+            } else {
+              positions[j] = (u - 0.5) * p.width; positions[j + 1] = (v - 0.5) * p.height;
+            }
+            positions[j + 2] = side ? 0 : thickness;
+          }
+          levels[i] = side ? 0.25 : height;
+          for (let axis = 0; axis < 3; axis++) {
+            bounds.min[axis] = Math.min(bounds.min[axis], positions[j + axis]);
+            bounds.max[axis] = Math.max(bounds.max[axis], positions[j + axis]);
+          }
+        }
+      }
+    }
+    let cursor = 0, quadCursor = 0;
+    function tri(a, b, c) { indices[cursor++] = a; indices[cursor++] = b; indices[cursor++] = c; }
+    function quad(a, b, c, d, alternate = false) {
+      quads[quadCursor++] = a; quads[quadCursor++] = b; quads[quadCursor++] = c; quads[quadCursor++] = d;
+      if (alternate) { tri(a, b, c); tri(a, c, d); }
+      else { tri(a, b, d); tri(b, c, d); }
+    }
+    for (let y = 0; y < ny; y++) {
+      for (let x = 0; x < nx; x++) {
+        const a = get(x, y), b = get(x + 1, y), c = get(x + 1, y + 1), d = get(x, y + 1);
+        let alternate = false;
+        if (p.topology === "adaptive") {
+          const right = x + 1 === nx ? 1 : grid.u[y * cols + x + 1];
+          const upperRight = x + 1 === nx ? 1 : grid.u[(y + 1) * cols + x + 1];
+          const left = grid.u[y * cols + x], upperLeft = grid.u[(y + 1) * cols + x];
+          const t = (right - left) / (right - left + upperRight - upperLeft);
+          const center = surfaceSample(data, p, left + (upperRight - left) * t, grid.v[y] + (grid.v[y + 1] - grid.v[y]) * t);
+          const acError = Math.abs(levels[a] * (1 - t) + levels[c] * t - center), bdError = Math.abs(levels[b] * (1 - t) + levels[d] * t - center);
+          alternate = Math.abs(acError - bdError) < 1e-6 ? (x + y) % 2 === 0 : acError < bdError;
+        }
+        quad(a, b, c, d, alternate);
+        quad(a + layer, d + layer, c + layer, b + layer, alternate);
+      }
+    }
+    function edge(a, b) { quad(a, a + layer, b + layer, b); }
+    for (let x = 0; x < nx; x++) { edge(get(x, 0), get(x + 1, 0)); edge(get(x + 1, ny), get(x, ny)); }
+    if (!full) {
+      for (let y = 0; y < ny; y++) { edge(get(nx, y), get(nx, y + 1)); edge(get(0, y + 1), get(0, y)); }
+    }
+    if (cursor !== indices.length || quadCursor !== quads.length) throw new Error("模型网格数量校验失败");
+    return { positions, indices, quads, levels, bounds, minThickness, maxThickness, info };
+  }
+  function meshRoundMedal(data, p, info) {
+    data = surfaceField(data, p);
+    const segments = info.segments, rings = info.rings, layer = 1 + segments * rings;
+    const positions = new Float32Array(info.vertices * 3), levels = new Float32Array(info.vertices);
+    const indices = new Uint32Array(info.triangles * 3), quads = new Uint32Array(info.quads * 4);
+    const objTriangles = new Uint32Array(info.centerTriangles * 3), radius = p.medalDiameter / 2;
+    const scale = Math.max(p.relief, p.rimHeight || 0, 1);
+    const bounds = { min:[Infinity, Infinity, Infinity], max:[-Infinity, -Infinity, -Infinity] };
+    const top = (ring, segment) => ring ? 1 + (ring - 1) * segments + segment % segments : 0;
+    const bottom = (ring, segment) => layer + top(ring, segment);
+    const put = (i, x, y, z, level) => {
+      positions[i * 3] = x; positions[i * 3 + 1] = y; positions[i * 3 + 2] = z; levels[i] = level;
+      bounds.min[0] = Math.min(bounds.min[0], x); bounds.min[1] = Math.min(bounds.min[1], y); bounds.min[2] = Math.min(bounds.min[2], z);
+      bounds.max[0] = Math.max(bounds.max[0], x); bounds.max[1] = Math.max(bounds.max[1], y); bounds.max[2] = Math.max(bounds.max[2], z);
+    };
+    let minThickness = Infinity, maxThickness = 0;
+    const centerHeight = medalSurface(data, p, 0, 0), centerThickness = p.base + scale * centerHeight;
+    put(top(0, 0), 0, 0, centerThickness, centerHeight); put(bottom(0, 0), 0, 0, 0, .25);
+    minThickness = centerThickness; maxThickness = centerThickness;
+    for (let ring = 1; ring <= rings; ring++) {
+      const r = radius * ring / rings;
+      for (let segment = 0; segment < segments; segment++) {
+        const angle = segment / segments * Math.PI * 2, x = Math.cos(angle) * r, y = Math.sin(angle) * r;
+        const height = medalSurface(data, p, x / radius, y / radius), thickness = p.base + scale * height;
+        minThickness = Math.min(minThickness, thickness); maxThickness = Math.max(maxThickness, thickness);
+        put(top(ring, segment), x, y, thickness, height); put(bottom(ring, segment), x, y, 0, .25);
+      }
+    }
+    let cursor = 0, quadCursor = 0, objCursor = 0;
+    const tri = (a, b, c) => { indices[cursor++] = a; indices[cursor++] = b; indices[cursor++] = c; };
+    const objTri = (a, b, c) => { objTriangles[objCursor++] = a; objTriangles[objCursor++] = b; objTriangles[objCursor++] = c; };
+    const quad = (a, b, c, d) => {
+      quads[quadCursor++] = a; quads[quadCursor++] = b; quads[quadCursor++] = c; quads[quadCursor++] = d;
+      tri(a, b, d); tri(b, c, d);
+    };
+    for (let segment = 0; segment < segments; segment++) {
+      const next = (segment + 1) % segments;
+      tri(top(0, 0), top(1, segment), top(1, next)); objTri(top(0, 0), top(1, segment), top(1, next));
+      tri(bottom(0, 0), bottom(1, next), bottom(1, segment)); objTri(bottom(0, 0), bottom(1, next), bottom(1, segment));
+    }
+    for (let ring = 1; ring < rings; ring++) for (let segment = 0; segment < segments; segment++) {
+      const next = (segment + 1) % segments;
+      quad(top(ring, next), top(ring, segment), top(ring + 1, segment), top(ring + 1, next));
+      quad(bottom(ring, segment), bottom(ring, next), bottom(ring + 1, next), bottom(ring + 1, segment));
+    }
+    const outer = ring => ring === rings ? ring : ring;
+    for (let segment = 0; segment < segments; segment++) {
+      const next = (segment + 1) % segments;
+      quad(top(outer(rings), next), top(outer(rings), segment), bottom(outer(rings), segment), bottom(outer(rings), next));
+    }
+    if (cursor !== indices.length || quadCursor !== quads.length || objCursor !== objTriangles.length) throw new Error("纪念章网格数量校验失败");
+    return { positions, indices, quads, objTriangles, levels, bounds, minThickness, maxThickness, info };
+  }
+  function stl(model, mode) {
+    const count = model.indices.length / 3, buffer = new ArrayBuffer(84 + count * 50), view = new DataView(buffer);
+    const header = "Relief Lab | millimeter dimensions | " + mode;
+    for (let i = 0; i < Math.min(header.length, 80); i++) view.setUint8(i, header.charCodeAt(i));
+    view.setUint32(80, count, true);
+    const p = model.positions, idx = model.indices;
+    for (let face = 0; face < count; face++) {
+      const a = idx[face * 3] * 3, b = idx[face * 3 + 1] * 3, c = idx[face * 3 + 2] * 3;
+      const ux = p[b] - p[a], uy = p[b + 1] - p[a + 1], uz = p[b + 2] - p[a + 2];
+      const vx = p[c] - p[a], vy = p[c + 1] - p[a + 1], vz = p[c + 2] - p[a + 2];
+      const normal = [uy * vz - uz * vy, uz * vx - ux * vz, ux * vy - uy * vx];
+      const length = Math.hypot(...normal);
+      if (!(length > 0)) throw new Error("检测到退化三角形，请调整模型尺寸或精度");
+      let offset = 84 + face * 50;
+      for (let axis = 0; axis < 3; axis++, offset += 4) view.setFloat32(offset, normal[axis] / length, true);
+      for (const point of [a, b, c]) for (let axis = 0; axis < 3; axis++, offset += 4) view.setFloat32(offset, p[point + axis], true);
+      view.setUint16(offset, 0, true);
+    }
+    return buffer;
+  }
+  function obj(model, p) {
+    const parts = ["# Relief Lab | coordinate dimensions in millimeters\n# Quad topology: " + (p.topology === "adaptive" ? "feature-adaptive heightfield" : "uniform") + "\no Relief_Lab\n"];
+    let lines = [];
+    for (let i = 0; i < model.positions.length; i += 3) {
+      lines.push("v " + [0, 1, 2].map(k => Number(model.positions[i + k].toFixed(6))).join(" ") + "\n");
+      if (lines.length === 8192) { parts.push(lines.join("")); lines = []; }
+    }
+    parts.push(lines.join(""), "s 1\n"); lines = [];
+    for (let i = 0; i < model.quads.length; i += 4) {
+      lines.push(`f ${model.quads[i] + 1} ${model.quads[i + 1] + 1} ${model.quads[i + 2] + 1} ${model.quads[i + 3] + 1}\n`);
+      if (lines.length === 8192) { parts.push(lines.join("")); lines = []; }
+    }
+    if (model.objTriangles) for (let i = 0; i < model.objTriangles.length; i += 3) {
+      lines.push(`f ${model.objTriangles[i] + 1} ${model.objTriangles[i + 1] + 1} ${model.objTriangles[i + 2] + 1}\n`);
+      if (lines.length === 8192) { parts.push(lines.join("")); lines = []; }
+    }
+    parts.push(lines.join("")); return parts.join("");
+  }
+  function rgba(data, limit = 1600, nearest = false) {
+    const scale = Math.min(1, limit / Math.max(data.w, data.h)), w = Math.max(1, Math.round(data.w * scale)), h = Math.max(1, Math.round(data.h * scale));
+    const pixels = new Uint8ClampedArray(w * h * 4);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const value = Math.round(sample(data, w > 1 ? x / (w - 1) : 0, h > 1 ? y / (h - 1) : 0, nearest) * 255);
+      const i = (y * w + x) * 4; pixels[i] = pixels[i + 1] = pixels[i + 2] = value; pixels[i + 3] = 255;
+    }
+    return { pixels, w, h };
+  }
+  return { process, processDepth, sample, plan, mesh, stl, obj, rgba };
+}
+function createTaskProcessor(factory) {
+  const core = factory(); let source = null, depth = null, processed = null, signature = "";
+  return function(request) {
+    if (request.type === "source") {
+      source = { pixels:request.pixels, w:request.w, h:request.h }; depth = null; processed = null; signature = "";
+      return { type:"source", id:request.id };
+    }
+    if (request.type === "depth-source") {
+      if (!request.field || request.field.length !== request.w * request.h) throw new Error("深度图尺寸无效");
+      depth = { field:request.field, w:request.w, h:request.h }; processed = null; signature = "";
+      return { type:"depth-source", id:request.id };
+    }
+    if (!source) throw new Error("请先导入一张图片");
+    const p = request.params;
+    const key = JSON.stringify([p.brightness, p.contrast, p.gamma, p.blur, p.invert, p.mirror, p.threshold, p.depthMode, p.depthVolume, p.depthCurve, p.depthSmooth, p.depthDetail, p.depthFloor, p.blackBackground]);
+    if (signature !== key || !processed) {
+      if (p.depthMode === "depth") {
+        if (!depth) throw new Error("请先生成或导入形体深度图");
+        processed = core.processDepth(depth, source, p);
+      } else processed = core.process(source.pixels, source.w, source.h, p);
+      signature = key;
+    }
+    if (request.type === "build") {
+      const density = p.density ?? p.quality ?? 192, limit = p.previewLimit || 160;
+      return { id:request.id, type:"build", model:core.mesh(processed, p, Math.min(density, limit)), image:core.rgba(processed, 480, p.depthMode === "threshold"), plan:core.plan(p) };
+    }
+    if (request.type === "depth") return { id:request.id, type:"depth", image:core.rgba(processed, 1600, p.depthMode === "threshold") };
+    if (request.type === "export") {
+      const model = core.mesh(processed, p);
+      const format = request.format === "obj" ? "obj" : "stl";
+      const buffer = format === "obj" ? new TextEncoder().encode(core.obj(model, p)).buffer : core.stl(model, p.mode);
+      return { id:request.id, type:"export", format, buffer, triangles:model.info.triangles, quads:model.info.quads, centerTriangles:model.info.centerTriangles || 0, bounds:model.bounds, minThickness:model.minThickness, maxThickness:model.maxThickness };
+    }
+    throw new Error("未知的处理请求");
+  };
+}
+</script>
+<script>
+"use strict";
+(() => {
+  const $ = id => document.getElementById(id);
+  const desktop = window.reliefDesktop;
+  if (desktop?.isDesktop) {
+    document.title = "浮光 · 图片转 STL";
+    $("open-output-folder").hidden = false;
+  }
+  const defaults = { brightness:0, contrast:0, threshold:128, gamma:1, blur:1, width:120, height:90, diameter:72, cylinderHeight:90, arc:360, seam:8, base:1.6, relief:6, density:192, adaptivity:65, relax:4, surfaceSmooth:0, depthVolume:100, depthCurve:1, depthSmooth:25, depthDetail:8, depthFloor:8, medalDiameter:80, rimWidth:2, rimHeight:.8, photoScale:90, photoX:0, photoY:0 };
+  const medalDefaults = { ...defaults, base:2.4, relief:6, density:320, surfaceSmooth:10 };
+  const values = { ...defaults };
+  const state = { mode:"flat", workspace:"normal", sourceName:"山峦", aspect:4/3, ready:false, importing:false, exporting:false, generating:false, generation:0, material:"sand", source:null, depth:null, depthKind:"", depthMessage:"" };
+  const workspaceSnapshots = new Map();
+  let toastTimer, buildTimer, importVersion = 0, depthVersion = 0, activeDepthID = null, buildRunning = false, buildAgain = false;
+  const fields = new Map();
+  for (const field of document.querySelectorAll("[data-control]")) {
+    const { control:key, label, min, max, step, value, unit = "" } = field.dataset;
+    const labelRow = document.createElement("div"); labelRow.className = "field-label";
+    const textLabel = document.createElement("label"); textLabel.htmlFor = key + "-range"; textLabel.textContent = label;
+    const valueWrap = document.createElement("span"); valueWrap.className = "value-input";
+    const input = document.createElement("input"); input.type = "number"; input.id = key + "-number"; input.min = min; input.max = max; input.step = step; input.value = value; input.setAttribute("aria-label",label + "数值");
+    const unitSpan = document.createElement("span"); unitSpan.textContent = unit; valueWrap.append(input, unitSpan); labelRow.append(textLabel, valueWrap);
+    const range = document.createElement("input"); range.type = "range"; range.id = key + "-range"; range.min = min; range.max = max; range.step = step; range.value = value;
+    field.append(labelRow, range); fields.set(key, { input, range, min:Number(min), max:Number(max), step:Number(step), label:textLabel });
+    range.addEventListener("input", () => changeValue(key, Number(range.value)));
+    input.addEventListener("input", () => { if (input.value !== "" && Number.isFinite(input.valueAsNumber) && input.validity.valid) changeValue(key, input.valueAsNumber); });
+    input.addEventListener("change", () => {
+      const raw = input.valueAsNumber; changeValue(key, Number.isFinite(raw) ? raw : values[key]);
+    });
+    paintField(key);
+  }
+  function paintField(key) {
+    const f = fields.get(key), value = values[key]; f.input.value = String(Number(value.toFixed(3))); f.range.value = value;
+    f.range.style.setProperty("--fill", ((value - f.min) / (f.max - f.min) * 100) + "%");
+  }
+  function setValue(key, value) {
+    const f = fields.get(key), digits = f.step < 1 ? 3 : 0;
+    values[key] = Number(Math.min(f.max, Math.max(f.min, Math.round(value / f.step) * f.step)).toFixed(digits)); paintField(key);
+  }
+  function changeValue(key, value) {
+    setValue(key, value);
+    if ($("aspect-lock").checked && state.mode === "flat") {
+      if (key === "width") syncAspect("width");
+      if (key === "height") syncAspect("height");
+    }
+    if (key === "arc") updateModeText();
+    if (key === "density") paintDensity();
+    scheduleBuild();
+  }
+  function syncAspect(changed) {
+    if (changed === "width") {
+      const target = values.width / state.aspect; setValue("height", target);
+      if (target < fields.get("height").min || target > fields.get("height").max) setValue("width", values.height * state.aspect);
+    } else {
+      const target = values.height * state.aspect; setValue("width", target);
+      if (target < fields.get("width").min || target > fields.get("width").max) setValue("height", values.width / state.aspect);
+    }
+  }
+  function params() {
+    let previewLimit = Number($("preview-detail").value) || values.density;
+    if (renderer && !renderer.supportsUint32) previewLimit = Math.min(previewLimit, 160);
+    const medal = state.workspace === "medal";
+    return { ...values, mode:state.mode, depthMode:medal ? "depth" : $("depth-mode").value, invert:$(medal ? "depth-invert" : "invert").checked, mirror:$(medal ? "depth-mirror" : "mirror").checked, blackBackground:$("black-background").checked, medalShape:$("medal-shape").value, quality:values.density, topology:$("topology").value, previewLimit };
+  }
+  function paintDensity() { for (const button of document.querySelectorAll("[data-density]")) button.classList.toggle("active", Number(button.dataset.density) === values.density); }
+  function updateTopologyControls() {
+    const radial = state.workspace === "medal" && $("medal-shape").value === "round";
+    const adaptive = !radial && $("topology").value === "adaptive";
+    $("topology").disabled = radial;
+    for (const key of ["adaptivity","relax"]) { fields.get(key).input.disabled = !adaptive; fields.get(key).range.disabled = !adaptive; }
+    $("topology-description").textContent = radial ? "圆形纪念章采用圆周分段和同心环结构：外圈保持真圆，章面按径向布线；密度同时控制圆周分段和径向层数。" : adaptive ? "根据深度变化重新分配四边形：细节处加密，平缓处放疏，并沿轮廓弯曲网格列。适用于本程序生成的高度场。" : "各方向均匀采样，网格间距固定。适合平整图形、规则阵列，以及与自适应结果对比。";
+  }
+  function toast(message, error = false) {
+    clearTimeout(toastTimer); $("toast").textContent = message; $("toast").classList.toggle("error", error); $("toast").classList.add("visible");
+    toastTimer = setTimeout(() => $("toast").classList.remove("visible"), error ? 6500 : 4300);
+  }
+  const sizeText = bytes => bytes >= 1024 * 1024 ? (bytes / 1024 / 1024).toFixed(1) + " MB" : (bytes / 1024).toFixed(0) + " KB";
+  const mm = number => Number(number.toFixed(2)).toString();
+  function live(busy, text) { $("live-state").classList.toggle("busy", busy); $("live-label").textContent = text; }
+  let worker = null, localProcessor = null, fallbackSource = null, fallbackDepth = null, taskID = 0;
+  const tasks = new Map();
+  function receive(response) {
+    const task = tasks.get(response.id); if (!task) return; tasks.delete(response.id);
+    if (response.error) task.reject(new Error(response.error)); else task.resolve(response);
+  }
+  function makeLocalProcessor() { localProcessor = createTaskProcessor(createReliefCore); }
+  try {
+    const workerSource = `"use strict";const createReliefCore=${createReliefCore.toString()};const createTaskProcessor=${createTaskProcessor.toString()};const processTask=createTaskProcessor(createReliefCore);self.onmessage=event=>{try{const result=processTask(event.data);const transfer=[];if(result.model)transfer.push(result.model.positions.buffer,result.model.indices.buffer,result.model.quads.buffer,result.model.levels.buffer);if(result.image)transfer.push(result.image.pixels.buffer);if(result.buffer)transfer.push(result.buffer);self.postMessage(result,transfer)}catch(error){self.postMessage({id:event.data.id,error:error.message})}};`;
+    const url = URL.createObjectURL(new Blob([workerSource], { type:"application/javascript" }));
+    worker = new Worker(url); URL.revokeObjectURL(url); worker.onmessage = event => receive(event.data);
+    worker.onerror = event => {
+      event.preventDefault(); worker?.terminate(); worker = null; makeLocalProcessor();
+      if (fallbackSource) localProcessor({ type:"source", id:0, ...fallbackSource });
+      if (fallbackDepth) localProcessor({ type:"depth-source", id:0, ...fallbackDepth });
+      for (const [id, task] of tasks) setTimeout(() => {
+        try { receive(localProcessor(task.request)); } catch (error) { receive({ id, error:error.message }); }
+      }, 0);
+      toast("已自动切换兼容处理模式。");
+    };
+  } catch (_) { makeLocalProcessor(); }
+  function dispatch(type, extra = {}, transfer = []) {
+    return new Promise((resolve, reject) => {
+      const id = ++taskID, request = { type, id, ...extra };
+      if (type === "source") { fallbackSource = { pixels:new Uint8ClampedArray(extra.pixels), w:extra.w, h:extra.h }; fallbackDepth = null; }
+      if (type === "depth-source") fallbackDepth = { field:new Float32Array(extra.field), w:extra.w, h:extra.h };
+      const retryRequest = type === "source" ? { ...request, ...fallbackSource } : type === "depth-source" ? { ...request, ...fallbackDepth } : request;
+      tasks.set(id, { resolve, reject, request:retryRequest });
+      if (worker) {
+        try { worker.postMessage(request, transfer); } catch (error) { tasks.delete(id); reject(error); }
+      } else setTimeout(() => { try { receive(localProcessor(request)); } catch (error) { receive({ id, error:error.message }); } }, 0);
+    });
+  }
+  function scheduleBuild() {
+    state.generation++; clearTimeout(buildTimer); live(true, "更新模型");
+    if (!state.ready || state.importing) return;
+    if (state.workspace === "medal" && !state.depth) { showDepthState(); live(false, "等待深度图"); return; }
+    buildTimer = setTimeout(buildPreview, 110);
+  }
+  async function buildPreview() {
+    if (!state.ready || state.importing || (state.workspace === "medal" && !state.depth)) return;
+    buildAgain = true; if (buildRunning) return; buildRunning = true;
+    try {
+      while (buildAgain && state.ready && !state.importing && (state.workspace !== "medal" || state.depth)) {
+        buildAgain = false;
+        const generation = state.generation, p = params();
+        live(true, "更新模型");
+        const result = await dispatch("build", { params:p });
+        if (generation !== state.generation) { buildAgain = true; continue; }
+        paintDepth(result.image); renderer?.setMesh(result.model);
+        $("quad-count").textContent = result.plan.quads.toLocaleString("en-US");
+        $("triangle-count").textContent = result.plan.triangles.toLocaleString("en-US");
+        $("file-size").textContent = sizeText(result.plan.bytes); $("export-estimate").textContent = sizeText(result.plan.bytes);
+        $("thickness-range").textContent = mm(result.model.minThickness) + "–" + mm(result.model.maxThickness) + " mm";
+        const max = result.model.maxThickness;
+        $("dimensions").textContent = p.mode === "medal" ? `${p.medalShape === "round" ? "直径" : "边长"} ${mm(p.medalDiameter)} / 最厚 ${mm(max)} mm` : p.mode === "flat" ? `${mm(p.width)} × ${mm(p.height)} × ${mm(max)} mm` : `内径 ${mm(p.diameter)} / 高 ${mm(p.cylinderHeight)} / 外径上限 ${mm(p.diameter + 2 * max)} mm`;
+        $("model-caption").textContent = state.sourceName + " · " + shapeName(p);
+        $("depth-mode-label").textContent = p.mode === "medal" ? state.depthKind === "ai" ? "AI 形体深度" : "导入深度图" : p.depthMode === "threshold" ? "黑白阈值" : "连续灰度";
+        const preview = result.model.info, complete = preview.nx === result.plan.nx && preview.ny === result.plan.ny;
+        const topologyLabel = result.plan.radial ? "圆周径向" : p.topology === "adaptive" ? "特征自适应" : "均匀";
+        $("preview-grid-note").textContent = `预览 ${preview.nx} × ${preview.ny} 段 · 导出 ${result.plan.nx} × ${result.plan.ny} 段 · ${topologyLabel}布线${complete ? " · 当前预览与导出密度一致" : " · 预览已简化，可切换“预览精度 → 与导出一致”检查真实布线"}${renderer && !renderer.supportsUint32 ? " · 当前显卡预览上限为 160，导出不受影响" : ""}`;
+        $("mesh-summary").innerHTML = `实际导出 <strong>${result.plan.nx} × ${result.plan.ny}</strong> ${result.plan.radial ? "圆周段 × 径向环" : "段"}<br><strong>${result.plan.vertices.toLocaleString("en-US")}</strong> 顶点 · <strong>${result.plan.quads.toLocaleString("en-US")}</strong> 四边形${result.plan.centerTriangles ? ` · <strong>${result.plan.centerTriangles}</strong> 中心三角面` : ""}<br>${result.plan.radial ? "径向间距约" : "均匀参考边长约"} <strong>${mm(result.plan.radial ? p.medalDiameter / 2 / result.plan.ny : Math.max(result.plan.width / result.plan.nx, result.plan.height / result.plan.ny))} mm</strong>`;
+        $("loading-cover").classList.add("hide"); live(false, "实时预览"); updateExportButton();
+      }
+    } catch (error) { toast(error.message, true); live(false, "生成失败"); $("loading-cover").classList.add("hide"); }
+    finally { buildRunning = false; }
+  }
+  function updateExportButton() {
+    const needsDepth = state.workspace === "medal" && !state.depth;
+    const disabled = !state.ready || state.importing || state.exporting || needsDepth || state.generating;
+    $("export-button").disabled = disabled; $("export-obj").disabled = disabled;
+    $("download-depth").disabled = !state.ready || state.importing || needsDepth || state.generating;
+    $("workspace-toggle").disabled = state.importing || state.exporting;
+    $("generate-depth").disabled = !state.ready || state.importing || state.generating;
+    $("empty-generate-depth").disabled = $("generate-depth").disabled;
+    $("import-depth").disabled = !state.ready || state.importing || state.exporting;
+    $("generate-depth").textContent = state.depthKind === "ai" ? "重新生成深度图" : "生成 AI 深度图";
+  }
+  function shapeName(p) { return p.mode === "medal" ? p.medalShape === "round" ? "圆形纪念章" : "方形纪念章" : p.mode === "flat" ? "平面浮雕" : p.arc === 360 ? "圆柱壳体" : "弧形壳体"; }
+  function paintDepth(image) {
+    const canvas = $("depth-canvas"); canvas.width = image.w; canvas.height = image.h;
+    canvas.getContext("2d").putImageData(new ImageData(image.pixels, image.w, image.h), 0, 0);
+  }
+  function updateModeText() {
+    const cylinder = state.mode === "cylinder", medal = state.workspace === "medal";
+    $("flat-fields").hidden = cylinder || medal; $("cylinder-fields").hidden = !cylinder;
+    $("medal-fields").hidden = !medal; $("normal-model-presets").hidden = medal;
+    $("normal-depth-section").hidden = medal; $("medal-depth-section").hidden = !medal;
+    $("normal-shape-tabs").hidden = medal; $("medal-preview-title").hidden = !medal;
+    $("medal-shape-label").textContent = $("medal-shape").value === "round" ? "圆形纪念章" : "方形纪念章";
+    $("depth-card-title").textContent = medal ? "形体深度图" : "黑白深度图";
+    $("workspace-toggle").setAttribute("aria-pressed", String(medal));
+    $("workspace-toggle-label").textContent = medal ? "返回普通模式" : "纪念章模式";
+    fields.get("base").label.textContent = cylinder ? "最小壁厚" : "最小底厚";
+    fields.get("base").input.setAttribute("aria-label", (cylinder ? "最小壁厚" : "最小底厚") + "数值");
+    $("thickness-label").textContent = cylinder ? "壁厚范围" : "厚度范围";
+    $("seam-field").hidden = values.arc !== 360;
+    $("cylinder-hint").textContent = values.arc === 360 ? "内壁光滑，图像向外浮雕；上下开口，壁厚边缘封口。图片水平环绕一周。" : "生成弧形壳体；上下开口，左右截面与壁厚边缘封口。图片铺满所选角度。";
+    for (const button of document.querySelectorAll("[data-mode]")) { const active = button.dataset.mode === state.mode; button.classList.toggle("active", active); button.setAttribute("aria-selected", String(active)); button.tabIndex = active ? 0 : -1; }
+  }
+  function changeMode(mode) { if (state.mode === mode) return; state.mode = mode; updateModeText(); renderer?.fit(mode); scheduleBuild(); }
+  for (const button of document.querySelectorAll("[data-mode]")) {
+    button.addEventListener("click", () => changeMode(button.dataset.mode));
+    button.addEventListener("keydown", event => {
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); changeMode(state.mode === "flat" ? "cylinder" : "flat"); document.querySelector(`.mode-tab[data-mode="${state.mode}"]`).focus(); }
+    });
+  }
+  for (const id of ["depth-mode","invert","mirror"]) $(id).addEventListener("change", () => { $("threshold-field").hidden = $("depth-mode").value !== "threshold"; scheduleBuild(); });
+  $("topology").addEventListener("change", () => { updateTopologyControls(); scheduleBuild(); });
+  $("preview-detail").addEventListener("change", scheduleBuild);
+  $("wire-mode").addEventListener("change", () => renderer?.setWireMode($("wire-mode").value));
+  for (const button of document.querySelectorAll("[data-density]")) button.addEventListener("click", () => changeValue("density", Number(button.dataset.density)));
+  $("preset-mesh").addEventListener("click", () => {
+    $("topology").value = "adaptive"; setValue("density",512); setValue("adaptivity",70); setValue("relax",6); setValue("surfaceSmooth",25); paintDensity(); updateTopologyControls(); scheduleBuild();
+    toast("已应用 512 段自适应布线和 25% 几何平滑。预览可切换为“与导出一致”。");
+  });
+  $("aspect-lock").addEventListener("change", () => { if ($("aspect-lock").checked) { syncAspect("width"); scheduleBuild(); } });
+  function resetImage() { for (const key of ["brightness","contrast","threshold","gamma","blur"]) setValue(key, defaults[key]); $("depth-mode").value = "grayscale"; $("invert").checked = false; $("mirror").checked = false; $("threshold-field").hidden = true; }
+  $("reset-image").addEventListener("click", () => { resetImage(); scheduleBuild(); });
+  $("reset-model").addEventListener("click", () => {
+    const preset = state.workspace === "medal" ? medalDefaults : defaults;
+    for (const key of ["width","height","diameter","cylinderHeight","arc","seam","base","relief","density","adaptivity","relax","surfaceSmooth","medalDiameter","rimWidth","rimHeight","photoScale","photoX","photoY"]) setValue(key,preset[key]);
+    $("topology").value = "adaptive"; $("preview-detail").value = "160"; $("wire-mode").value = "quad"; renderer?.setWireMode("quad"); paintDensity(); updateTopologyControls();
+    $("aspect-lock").checked = true; if (state.workspace !== "medal") syncAspect("width"); updateModeText(); renderer?.fit(state.mode); scheduleBuild();
+    toast("已还原模型参数，图像调整保持当前设置。");
+  });
+  $("preset-relief").addEventListener("click", () => { resetImage(); setValue("base",1.6); setValue("relief",3.2); setValue("contrast",12); changeMode("flat"); scheduleBuild(); toast("已应用浮雕推荐参数，可继续微调。"); });
+  $("preset-lamp").addEventListener("click", () => { resetImage(); $("invert").checked = true; setValue("base",0.8); setValue("relief",2.4); setValue("arc",360); changeMode("cylinder"); updateModeText(); scheduleBuild(); toast("已应用透光灯罩参数：原图亮处更薄，暗处更厚。"); });
+  const snapshotSelects = ["depth-mode","topology","preview-detail","wire-mode","depth-quality","medal-shape"];
+  const snapshotChecks = ["invert","mirror","aspect-lock","depth-invert","depth-mirror","black-background"];
+  function captureWorkspace() {
+    return {
+      values:{ ...values }, mode:state.mode, source:state.source, depth:state.depth,
+      depthKind:state.depthKind, depthMessage:state.depthMessage,
+      selects:Object.fromEntries(snapshotSelects.map(id => [id,$(id).value])),
+      checks:Object.fromEntries(snapshotChecks.map(id => [id,$(id).checked]))
+    };
+  }
+  function cancelDepthGeneration(silent = false) {
+    depthVersion++;
+    const running = Boolean(activeDepthID);
+    activeDepthID = null; state.generating = false;
+    if (running) desktop?.cancelDepth?.().catch(() => {});
+    $("depth-progress").hidden = true;
+    if (running && !silent) { state.depthMessage = state.depth ? "已取消重新生成，保留上一次深度图。" : "已取消生成。"; $("depth-status").textContent = state.depthMessage; }
+    updateExportButton();
+  }
+  function showDepthState() {
+    const empty = state.workspace === "medal" && !state.depth;
+    $("depth-empty").hidden = !empty; $("depth-card-empty").hidden = !empty;
+    if (empty) {
+      $("loading-cover").classList.add("hide");
+      for (const id of ["quad-count","triangle-count","file-size","thickness-range","export-estimate"]) $(id).textContent = "—";
+      $("depth-mode-label").textContent = "等待深度图";
+      $("model-caption").textContent = state.sourceName + " · 纪念章";
+      $("dimensions").textContent = ""; $("preview-grid-note").textContent = ""; $("mesh-summary").textContent = "";
+    }
+    $("depth-status").textContent = state.depthMessage || "导入照片后生成，或载入与原图对齐的深度图。";
+    $("depth-status").dataset.state = "";
+    updateExportButton();
+  }
+  function paintSource(source) {
+    const preview = $("original-canvas"); preview.width = source.w; preview.height = source.h;
+    preview.getContext("2d").putImageData(new ImageData(new Uint8ClampedArray(source.pixels), source.w, source.h), 0, 0);
+    const thumb = $("import-preview"), scale = Math.min(320 / source.w, 180 / source.h);
+    thumb.width = Math.max(1, Math.round(source.w * scale)); thumb.height = Math.max(1, Math.round(source.h * scale));
+    thumb.getContext("2d").drawImage(preview, 0, 0, thumb.width, thumb.height);
+    thumb.hidden = false; $("import-image-action").hidden = false; $("drop-zone").classList.add("has-image");
+    thumb.setAttribute("aria-label", "当前导入图片的缩略预览：" + source.fileName);
+    state.aspect = source.originalW / source.originalH; state.sourceName = source.fileName.replace(/\.[^.]+$/, "");
+    $("file-name").textContent = source.fileName; $("file-name").title = source.fileName; $("source-tag").textContent = source.isSample ? "示例" : "已载入";
+    $("image-dimensions").textContent = `${source.originalW} × ${source.originalH} px${source.w < source.originalW || source.h < source.originalH ? " · 已优化" : ""}`;
+  }
+  async function switchWorkspace() {
+    if (state.importing || state.exporting) return;
+    workspaceSnapshots.set(state.workspace, captureWorkspace());
+    cancelDepthGeneration(true);
+    const next = state.workspace === "normal" ? "medal" : "normal";
+    const saved = workspaceSnapshots.get(next) || {
+      values:{ ...medalDefaults }, mode:"medal", source:state.source, depth:null, depthKind:"", depthMessage:"",
+      selects:{ "depth-mode":"grayscale", topology:"uniform", "preview-detail":"160", "wire-mode":"quad", "depth-quality":"518", "medal-shape":"round" },
+      checks:{ invert:false, mirror:false, "aspect-lock":true, "depth-invert":false, "depth-mirror":false, "black-background":true }
+    };
+    const version = ++importVersion; state.importing = true; state.generation++; clearTimeout(buildTimer);
+    state.workspace = next; state.mode = saved.mode; state.source = saved.source; state.depth = saved.depth;
+    state.depthKind = saved.depthKind; state.depthMessage = saved.depthMessage; state.ready = Boolean(saved.source);
+    Object.assign(values,saved.values); for (const key of fields.keys()) paintField(key);
+    for (const [id,value] of Object.entries(saved.selects)) $(id).value = value;
+    for (const [id,value] of Object.entries(saved.checks)) $(id).checked = value;
+    $("threshold-field").hidden = $("depth-mode").value !== "threshold";
+    updateModeText(); updateTopologyControls(); paintDensity(); showDepthState();
+    try {
+      if (state.source) {
+        paintSource(state.source);
+        await dispatch("source", { pixels:new Uint8ClampedArray(state.source.pixels), w:state.source.w, h:state.source.h });
+        if (state.depth && version === importVersion) await dispatch("depth-source", { field:new Float32Array(state.depth.field), w:state.depth.w, h:state.depth.h });
+      }
+      renderer?.setWireMode($("wire-mode").value); renderer?.fit(state.mode);
+    } catch (error) { toast("模式切换失败：" + error.message,true); }
+    finally { if (version === importVersion) { state.importing = false; showDepthState(); scheduleBuild(); } }
+  }
+  $("workspace-toggle").addEventListener("click", switchWorkspace);
+  $("medal-shape").addEventListener("change", () => { updateModeText(); updateTopologyControls(); renderer?.fit(state.mode); scheduleBuild(); });
+  for (const id of ["depth-invert","depth-mirror","black-background"]) $(id).addEventListener("change",scheduleBuild);
+  $("reset-depth-effects").addEventListener("click", () => {
+    for (const key of ["depthVolume","depthCurve","depthSmooth","depthDetail","depthFloor"]) setValue(key,medalDefaults[key]);
+    $("depth-invert").checked = false; $("depth-mirror").checked = false; $("black-background").checked = true; scheduleBuild();
+  });
+  async function installDepth(depth, kind, message, version) {
+    if (version !== importVersion || state.workspace !== "medal") return false;
+    const stored = { field:new Float32Array(depth.field), w:depth.w, h:depth.h };
+    await dispatch("depth-source", { field:new Float32Array(stored.field), w:stored.w, h:stored.h });
+    if (version !== importVersion || state.workspace !== "medal") return false;
+    state.depth = stored; state.depthKind = kind; state.depthMessage = message; showDepthState(); scheduleBuild();
+    return true;
+  }
+  async function generateDepth() {
+    if (state.workspace !== "medal" || !state.source || state.importing || state.generating) return;
+    if (!desktop?.estimateDepth) { toast("AI 深度生成请使用新版桌面 EXE；此 HTML 可导入已有深度图。",true); return; }
+    const version = importVersion, generation = ++depthVersion, id = `depth-${Date.now()}-${generation}`;
+    const source = state.source; activeDepthID = id; state.generating = true;
+    $("depth-progress").hidden = false; $("depth-progress-label").textContent = "加载本地深度模型";
+    $("depth-status").dataset.state = ""; updateExportButton();
+    try {
+      const result = await desktop.estimateDepth({ id, pixels:new Uint8Array(source.pixels), w:source.w, h:source.h, target:Number($("depth-quality").value) });
+      if (generation !== depthVersion || version !== importVersion || state.workspace !== "medal") return;
+      if (result?.cancelled) {
+        state.depthMessage = result.reason === "timeout" ? "生成超时，请选择标准精度后重试。" : "已取消生成。";
+        showDepthState(); return;
+      }
+      const seconds = (result.elapsedMs / 1000).toFixed(1);
+      if (await installDepth(result, "ai", `AI 形体深度 · ${result.w} × ${result.h} · 推理 ${seconds} 秒`, version)) toast("形体深度图已生成，可调整效果与章坯参数。");
+    } catch (error) {
+      if (generation === depthVersion && version === importVersion) {
+        state.depthMessage = "深度生成失败，可重试或导入已有深度图。";
+        $("depth-status").textContent = state.depthMessage; $("depth-status").dataset.state = "error";
+        toast("AI 深度生成失败：" + error.message,true);
+      }
+    } finally {
+      if (activeDepthID === id) { activeDepthID = null; state.generating = false; $("depth-progress").hidden = true; updateExportButton(); }
+    }
+  }
+  $("generate-depth").addEventListener("click",generateDepth);
+  $("empty-generate-depth").addEventListener("click",generateDepth);
+  $("cancel-depth").addEventListener("click",() => cancelDepthGeneration());
+  desktop?.onDepthProgress?.(({ id, phase }) => {
+    if (id !== activeDepthID) return;
+    $("depth-progress-label").textContent = ({ loading:"加载本地深度模型", preparing:"准备图片", inference:"估计形体深度", finishing:"整理深度数据" })[phase] || "正在生成深度图";
+  });
+  $("import-depth").addEventListener("click",() => $("depth-file-input").click());
+  $("depth-file-input").addEventListener("change",async event => {
+    const file = event.target.files[0]; if (!file || !state.source || state.workspace !== "medal") return;
+    if (file.size > 30 * 1024 * 1024) { toast("深度图超过 30 MB，请缩小后再导入。",true); event.target.value = ""; return; }
+    cancelDepthGeneration(true);
+    const version = importVersion; state.importing = true; state.generation++; updateExportButton();
+    let url;
+    try {
+      url = URL.createObjectURL(file); const image = new Image(); image.src = url; await image.decode();
+      if (version !== importVersion) return;
+      if (Math.abs((image.naturalWidth / image.naturalHeight) / state.aspect - 1) > .015) throw new Error("深度图宽高比需与原图一致，请先对齐图片");
+      const scale = Math.min(1,1600 / Math.max(image.naturalWidth,image.naturalHeight));
+      const w = Math.max(1,Math.round(image.naturalWidth * scale)), h = Math.max(1,Math.round(image.naturalHeight * scale));
+      const canvas = document.createElement("canvas"); canvas.width = w; canvas.height = h; canvas.getContext("2d").drawImage(image,0,0,w,h);
+      const pixels = canvas.getContext("2d").getImageData(0,0,w,h).data, field = new Float32Array(w * h);
+      for (let i = 0; i < field.length; i++) field[i] = (pixels[i * 4] * .2126 + pixels[i * 4 + 1] * .7152 + pixels[i * 4 + 2] * .0722) / 255 * pixels[i * 4 + 3] / 255;
+      await installDepth({ field,w,h },"imported",`已导入：${file.name}`,version);
+    } catch (error) { if (version === importVersion) toast("深度图导入失败：" + error.message,true); }
+    finally {
+      if (url) URL.revokeObjectURL(url); event.target.value = "";
+      if (version === importVersion) { state.importing = false; showDepthState(); scheduleBuild(); }
+    }
+  });
+  async function commitCanvas(canvas, fileName, originalW, originalH, isSample, version) {
+    if (version !== importVersion) return;
+    const ratio = Math.min(1, 1600 / Math.max(canvas.width, canvas.height));
+    const raster = document.createElement("canvas"); raster.width = Math.max(1, Math.round(canvas.width * ratio)); raster.height = Math.max(1, Math.round(canvas.height * ratio));
+    const context = raster.getContext("2d", { willReadFrequently:true }); context.drawImage(canvas, 0, 0, raster.width, raster.height);
+    const pixels = context.getImageData(0, 0, raster.width, raster.height).data;
+    const source = { pixels:new Uint8ClampedArray(pixels), w:raster.width, h:raster.height, fileName, originalW, originalH, isSample };
+    await dispatch("source", { pixels, w:raster.width, h:raster.height }, [pixels.buffer]);
+    if (version !== importVersion) return;
+    for (const snapshot of workspaceSnapshots.values()) {
+      snapshot.source = source; snapshot.depth = null; snapshot.depthKind = ""; snapshot.depthMessage = "";
+    }
+    state.source = source; state.depth = null; state.depthKind = ""; state.depthMessage = ""; state.ready = true;
+    paintSource(source); showDepthState();
+    if ($("aspect-lock").checked && state.workspace !== "medal") syncAspect("width");
+    renderer?.fit(state.mode);
+  }
+  async function importFile(file) {
+    if (!file) return;
+    if (!file.type.startsWith("image/") && !/\.(png|jpe?g|webp|bmp|gif|avif)$/i.test(file.name)) { toast("请选择 PNG、JPG、WEBP、BMP 等图片文件。", true); return; }
+    if (file.size > 30 * 1024 * 1024) { toast("图片超过 30 MB，请缩小后再导入。", true); return; }
+    cancelDepthGeneration(true);
+    const version = ++importVersion; state.importing = true; state.generation++; updateExportButton(); live(true, "读取图片");
+    let objectUrl;
+    try {
+      objectUrl = URL.createObjectURL(file);
+      const image = new Image(); image.src = objectUrl;
+      await image.decode();
+      if (version !== importVersion) return;
+      const originalW = image.naturalWidth, originalH = image.naturalHeight;
+      if (!originalW || !originalH) throw new Error("图片尺寸无效");
+      const ratio = Math.min(1, 1600 / Math.max(originalW, originalH));
+      const canvas = document.createElement("canvas"); canvas.width = Math.max(1, Math.round(originalW * ratio)); canvas.height = Math.max(1, Math.round(originalH * ratio)); canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+      await commitCanvas(canvas, file.name, originalW, originalH, false, version);
+      if (version === importVersion) toast(state.workspace === "medal" ? "图片已导入，请生成 AI 深度图或导入已有深度图。" : "图片已导入，深度图和模型已准备就绪。");
+    } catch (error) { if (version === importVersion) toast("图片读取失败，请尝试 PNG、JPG 或 WEBP 格式。", true); }
+    finally {
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+      if (version === importVersion) { state.importing = false; updateExportButton(); if (state.ready) scheduleBuild(); else live(false, "等待图片"); }
+      $("file-input").value = "";
+    }
+  }
+  function demoCanvas() {
+    const canvas = document.createElement("canvas"); canvas.width = 512; canvas.height = 384;
+    const ctx = canvas.getContext("2d"), image = ctx.createImageData(canvas.width, canvas.height);
+    const stops = [[0,37,70,66],[0.32,74,110,89],[0.57,134,152,112],[0.78,192,187,141],[1,241,225,184]];
+    for (let y = 0; y < canvas.height; y++) for (let x = 0; x < canvas.width; x++) {
+      const u = x / canvas.width * 2 - 1, v = y / canvas.height * 2 - 1;
+      const peak = (cx, cy, sx, sy, a) => a * Math.exp(-((u - cx) ** 2 / sx + (v - cy) ** 2 / sy));
+      let h = 0.09 + peak(-0.29,-0.08,0.26,0.47,0.69) + peak(0.39,0.36,0.14,0.21,0.72) + peak(0.6,-0.57,0.12,0.11,0.55) + peak(-0.8,0.75,0.2,0.17,0.4);
+      h += (0.038 * Math.sin(u * 23 + v * 15) + 0.022 * Math.sin(v * 37 - u * 12) + 0.008 * Math.sin(u * 84 + v * 61)) * Math.min(1,h * 1.8);
+      h = Math.min(1,Math.max(0,h)); const contour = Math.pow(Math.max(0, Math.cos(h * 88)), 24) * 0.038; h = Math.max(0,h - contour);
+      let s = 0; while (s < stops.length - 2 && h > stops[s + 1][0]) s++;
+      const a = stops[s], b = stops[s + 1], t = (h - a[0]) / (b[0] - a[0]), i = (y * canvas.width + x) * 4;
+      for (let c = 0; c < 3; c++) image.data[i + c] = a[c + 1] * (1 - t) + b[c + 1] * t;
+      image.data[i + 3] = 255;
+    }
+    ctx.putImageData(image, 0, 0); return canvas;
+  }
+  async function loadSample() {
+    cancelDepthGeneration(true);
+    const version = ++importVersion; state.importing = true; state.generation++; updateExportButton();
+    try { const canvas = demoCanvas(); await commitCanvas(canvas, "山峦.png", canvas.width, canvas.height, true, version); }
+    catch (error) { toast(error.message, true); }
+    finally { if (version === importVersion) { state.importing = false; updateExportButton(); scheduleBuild(); } }
+  }
+  $("drop-zone").addEventListener("click", () => $("file-input").click()); $("file-input").addEventListener("change", event => importFile(event.target.files[0]));
+  $("sample-button").addEventListener("click", loadSample);
+  function clipboardName() {
+    const date = new Date(), pad = value => String(value).padStart(2,"0");
+    return `剪贴板_${date.getFullYear()}${pad(date.getMonth()+1)}${pad(date.getDate())}_${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}.png`;
+  }
+  function imageFromTransfer(transfer) {
+    const files = Array.from(transfer?.files || []);
+    for (const item of Array.from(transfer?.items || [])) if (item.kind === "file") { const file = item.getAsFile(); if (file) files.push(file); }
+    return files.find(file => file.type.startsWith("image/") || /\.(png|jpe?g|webp|bmp|gif|avif)$/i.test(file.name));
+  }
+  function importClipboardFile(file) {
+    const name = file.name && file.name !== "image.png" ? file.name : clipboardName();
+    return importFile(new File([file], name, { type:file.type || "image/png" }));
+  }
+  async function importDesktopImage(payload) {
+    if (!payload) { toast("剪贴板中没有图片。请先截图，或复制一个图片文件。"); return; }
+    if (payload.error) { toast(payload.error, true); return; }
+    await importFile(new File([payload.bytes], payload.name || clipboardName(), { type:payload.type || "image/png" }));
+  }
+  window.addEventListener("paste", event => {
+    const file = imageFromTransfer(event.clipboardData);
+    if (file) { event.preventDefault(); importClipboardFile(file); }
+  });
+  $("paste-button").addEventListener("click", async () => {
+    try {
+      if (desktop?.isDesktop) { await importDesktopImage(await desktop.readClipboardImage()); return; }
+      if (!navigator.clipboard?.read) { toast("请在界面中按 Ctrl+V 粘贴截图或图片。"); return; }
+      for (const item of await navigator.clipboard.read()) {
+        const type = item.types.find(type => type.startsWith("image/"));
+        if (type) { await importClipboardFile(new File([await item.getType(type)], clipboardName(), { type })); return; }
+      }
+      toast("剪贴板中没有图片。请先复制图片或截图，再按 Ctrl+V。");
+    } catch (_) { toast("未能读取剪贴板，请直接按 Ctrl+V 粘贴图片。", true); }
+  });
+  desktop?.onImportImage(payload => { importDesktopImage(payload).catch(() => toast("图片导入失败，请重新选择图片。", true)); });
+  desktop?.onCommand(command => {
+    if (command === "export-stl") $("export-button").click();
+    if (command === "export-obj") $("export-obj").click();
+    if (command === "export-png") $("download-depth").click();
+    if (command === "open-output") $("open-output-folder").click();
+    if (command === "help") $("help-dialog").showModal();
+  });
+  let dragDepth = 0;
+  window.addEventListener("dragenter", event => {
+    if (Array.from(event.dataTransfer?.types || []).includes("Files")) { event.preventDefault(); dragDepth++; $("global-drop").classList.add("show"); }
+  });
+  window.addEventListener("dragover", event => { if (Array.from(event.dataTransfer?.types || []).includes("Files")) { event.preventDefault(); event.dataTransfer.dropEffect = "copy"; } });
+  window.addEventListener("dragleave", event => { if (dragDepth > 0) dragDepth--; if (!dragDepth || !event.relatedTarget) $("global-drop").classList.remove("show"); });
+  window.addEventListener("drop", event => { event.preventDefault(); dragDepth = 0; $("global-drop").classList.remove("show"); const files = Array.from(event.dataTransfer?.files || []); if (files.length) { importFile(files[0]); if (files.length > 1) toast("本次使用第一张图片；可再次拖入替换。"); } });
+  window.addEventListener("blur", () => { dragDepth = 0; $("global-drop").classList.remove("show"); });
+  async function saveBlob(blob, name) {
+    if (desktop?.isDesktop) {
+      const result = await desktop.saveFile({ name, bytes:new Uint8Array(await blob.arrayBuffer()) });
+      return Boolean(result?.saved);
+    }
+    const url = URL.createObjectURL(blob), link = document.createElement("a"); link.href = url; link.download = name; document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
+    return true;
+  }
+  function safeName() { return state.sourceName.replace(/[<>:"/\\|?*\x00-\x1f]/g,"_").slice(0,70) || "浮光"; }
+  async function exportModel(format) {
+    if (!state.ready || state.importing || state.exporting || state.generating || (state.workspace === "medal" && !state.depth)) return;
+    state.exporting = true; updateExportButton(); $("export-label").textContent = `正在生成 ${format.toUpperCase()}…`;
+    const p = params(), name = safeName(), shape = shapeName(p), topology = p.mode === "medal" && p.medalShape === "round" ? "圆周径向" : p.topology === "adaptive" ? "自适应" : "均匀";
+    try {
+      const result = await dispatch("export", { params:p, format });
+      const saved = await saveBlob(new Blob([result.buffer], { type:format === "obj" ? "text/plain;charset=utf-8" : "model/stl" }), `${name}_${shape}_${topology}_${p.density}段_mm.${format}`);
+      const count = format === "obj" ? result.quads + result.centerTriangles : result.triangles;
+      const type = format === "obj" ? result.centerTriangles ? "个四边形与中心三角面" : "个四边形" : "个三角面";
+      toast(saved ? `${format.toUpperCase()} 已保存：${count.toLocaleString("en-US")} ${type}，${sizeText(result.buffer.byteLength)}。` : "已取消保存模型。");
+    } catch (error) { toast("导出失败：" + error.message, true); }
+    finally { state.exporting = false; updateExportButton(); $("export-label").textContent = "导出 STL 模型"; }
+  }
+  $("export-button").addEventListener("click", () => exportModel("stl"));
+  $("export-obj").addEventListener("click", () => exportModel("obj"));
+  $("open-output-folder").addEventListener("click", async () => {
+    const button = $("open-output-folder");
+    if (!desktop?.openOutputFolder || button.disabled) return;
+    button.disabled = true;
+    try { await desktop.openOutputFolder(); }
+    catch (_) { toast("无法打开输出文件夹，请检查保存位置是否可用。", true); }
+    finally { button.disabled = false; }
+  });
+  $("download-depth").addEventListener("click", async () => {
+    if (!state.ready || state.importing || state.generating || (state.workspace === "medal" && !state.depth)) return;
+    const name = safeName(); $("download-depth").disabled = true;
+    try {
+      const result = await dispatch("depth", { params:params() }), canvas = document.createElement("canvas");
+      canvas.width = result.image.w; canvas.height = result.image.h; canvas.getContext("2d").putImageData(new ImageData(result.image.pixels, canvas.width, canvas.height), 0, 0);
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+      if (!blob) throw new Error("PNG 编码失败");
+      const saved = await saveBlob(blob, `${name}_${state.workspace === "medal" ? "形体深度图" : "深度图"}.png`); toast(saved ? "已保存黑白深度图 PNG。" : "已取消保存深度图。");
+    } catch (error) { toast("深度图下载失败：" + error.message, true); }
+    finally { updateExportButton(); }
+  });
+  $("help-button").addEventListener("click", () => $("help-dialog").showModal());
+  for (const id of ["close-help","got-it"]) $(id).addEventListener("click", () => $("help-dialog").close());
+  $("help-dialog").addEventListener("click", event => { if (event.target === $("help-dialog")) { const rect = $("help-dialog").getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) $("help-dialog").close(); } });
+  function createRenderer(canvas) {
+    const gl = canvas.getContext("webgl", { antialias:true, alpha:true, preserveDrawingBuffer:true });
+    if (!gl) { $("webgl-fallback").classList.add("show"); return null; }
+    const supportsUint32 = Boolean(gl.getExtension("OES_element_index_uint"));
+    const vertexSource = `attribute vec3 aPosition;attribute vec3 aNormal;attribute float aLevel;uniform mat4 uMVP;varying vec3 vNormal;varying vec3 vPosition;varying float vLevel;void main(){vNormal=aNormal;vPosition=aPosition;vLevel=aLevel;gl_Position=uMVP*vec4(aPosition,1.0);}`;
+    const fragmentSource = `precision mediump float;varying vec3 vNormal;varying vec3 vPosition;varying float vLevel;uniform vec3 uColor;uniform float uMode;void main(){if(uMode>1.5){gl_FragColor=vec4(.48,.55,.40,.16);return;}if(uMode>.5){gl_FragColor=vec4(.22,.29,.18,.24);return;}vec3 n=normalize(vNormal);float key=max(dot(n,normalize(vec3(-.8,.45,.3))),0.);float fill=max(dot(n,normalize(vec3(.7,.4,-.6))),0.);float hemi=.5+.5*n.y;float light=.32+.66*key+.15*fill+.10*hemi;vec3 color=uColor*light;float detail=.84+.23*vLevel;color*=detail;float rim=pow(max(dot(n,normalize(vec3(.2,.7,1.))),0.),20.)*.08;color+=rim;gl_FragColor=vec4(color,1.);}`;
+    function shader(type, source) { const s = gl.createShader(type); gl.shaderSource(s, source); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error("三维着色器编译失败"); return s; }
+    const program = gl.createProgram(); gl.attachShader(program, shader(gl.VERTEX_SHADER, vertexSource)); gl.attachShader(program, shader(gl.FRAGMENT_SHADER, fragmentSource)); gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error("三维渲染器初始化失败");
+    gl.useProgram(program);
+    const loc = { position:gl.getAttribLocation(program,"aPosition"), normal:gl.getAttribLocation(program,"aNormal"), level:gl.getAttribLocation(program,"aLevel"), mvp:gl.getUniformLocation(program,"uMVP"), color:gl.getUniformLocation(program,"uColor"), mode:gl.getUniformLocation(program,"uMode") };
+    const vertexBuffer = gl.createBuffer(), indexBuffer = gl.createBuffer(), wireBuffer = gl.createBuffer(), quadWireBuffer = gl.createBuffer(), groundBuffer = gl.createBuffer();
+    const camera = { yaw:-0.42, pitch:0.82, distance:3.8, panX:0, panY:0 }, materials = { sand:[0.78,0.68,0.51], chalk:[0.91,0.90,0.83], sage:[0.56,0.66,0.53] };
+    let count = 0, wireCount = 0, quadWireCount = 0, groundCount = 0, showWire = false, wireMode = "quad", indexType = gl.UNSIGNED_SHORT, material = "sand", contextLost = false;
+    function multiply(a,b) {
+      const out = new Float32Array(16);
+      for (let col=0;col<4;col++) for (let row=0;row<4;row++) out[col*4+row]=a[row]*b[col*4]+a[4+row]*b[col*4+1]+a[8+row]*b[col*4+2]+a[12+row]*b[col*4+3];
+      return out;
+    }
+    function viewMatrix(eye,target) {
+      const normalize = a => { const n = Math.hypot(...a); return a.map(v=>v/n); };
+      const z = normalize(eye.map((v,i)=>v-target[i])), x = normalize([z[2],0,-z[0]]), y = [z[1]*x[2]-z[2]*x[1],z[2]*x[0]-z[0]*x[2],z[0]*x[1]-z[1]*x[0]];
+      const dot = a => -(a[0]*eye[0]+a[1]*eye[1]+a[2]*eye[2]);
+      return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,dot(x),dot(y),dot(z),1]);
+    }
+    function bindVertex(buffer) {
+      gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+      for (const [at,size,offset] of [[loc.position,3,0],[loc.normal,3,12],[loc.level,1,24]]) { gl.enableVertexAttribArray(at); gl.vertexAttribPointer(at,size,gl.FLOAT,false,28,offset); }
+    }
+    function draw() {
+      if (contextLost) return;
+      const width = Math.max(1,canvas.clientWidth), height = Math.max(1,canvas.clientHeight), pixelRatio = Math.min(window.devicePixelRatio || 1,2);
+      const targetW = Math.round(width*pixelRatio), targetH = Math.round(height*pixelRatio);
+      if (canvas.width !== targetW || canvas.height !== targetH) { canvas.width=targetW;canvas.height=targetH; }
+      gl.viewport(0,0,canvas.width,canvas.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+      if (!count) return;
+      const aspect = width/height, f=1/Math.tan(37*Math.PI/360), near=.05,far=100;
+      const projection = new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)/(near-far),-1,0,0,2*far*near/(near-far),0]);
+      const d=camera.distance*Math.max(1,1/aspect*1.2), cp=Math.cos(camera.pitch);
+      const eye=[d*cp*Math.sin(camera.yaw)+camera.panX,d*Math.sin(camera.pitch)+camera.panY,d*cp*Math.cos(camera.yaw)];
+      gl.uniformMatrix4fv(loc.mvp,false,multiply(projection,viewMatrix(eye,[camera.panX,camera.panY,0])));
+      gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);gl.frontFace(gl.CCW);
+      gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+      bindVertex(groundBuffer);gl.uniform1f(loc.mode,2);gl.drawArrays(gl.LINES,0,groundCount);
+      bindVertex(vertexBuffer);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.uniform1f(loc.mode,0);gl.uniform3fv(loc.color,materials[material]);
+      gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(1,1);gl.drawElements(gl.TRIANGLES,count,indexType,0);gl.disable(gl.POLYGON_OFFSET_FILL);
+      if(showWire){gl.uniform1f(loc.mode,1);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,wireMode==="quad"?quadWireBuffer:wireBuffer);gl.drawElements(gl.LINES,wireMode==="quad"?quadWireCount:wireCount,indexType,0);}
+    }
+    function setMesh(model) {
+      const { positions:p,indices:idx,quads,levels,bounds }=model,normals=new Float32Array(p.length), data=new Float32Array(p.length/3*7);
+      const large = p.length / 3 > 65535;
+      if (large && !supportsUint32) throw new Error("当前显卡不支持高密度预览，请切换为轻量预览；导出精度不受影响。");
+      const IndexArray = large ? Uint32Array : Uint16Array; indexType = large ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
+      for(let i=0;i<idx.length;i+=3){
+        const a=idx[i]*3,b=idx[i+1]*3,c=idx[i+2]*3,ux=p[b]-p[a],uy=p[b+1]-p[a+1],uz=p[b+2]-p[a+2],vx=p[c]-p[a],vy=p[c+1]-p[a+1],vz=p[c+2]-p[a+2];
+        const nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;
+        for(const j of [a,b,c]){normals[j]+=nx;normals[j+1]+=ny;normals[j+2]+=nz;}
+      }
+      const center=bounds.min.map((v,i)=>(v+bounds.max[i])/2),longest=Math.max(...bounds.max.map((v,i)=>v-bounds.min[i])),scale=1.82/longest;
+      for(let i=0;i<p.length/3;i++){
+        const j=i*3,k=i*7,length=Math.hypot(normals[j],normals[j+1],normals[j+2])||1;
+        data[k]=(p[j]-center[0])*scale;data[k+1]=(p[j+2]-center[2])*scale;data[k+2]=-(p[j+1]-center[1])*scale;
+        data[k+3]=normals[j]/length;data[k+4]=normals[j+2]/length;data[k+5]=-normals[j+1]/length;data[k+6]=levels[i];
+      }
+      gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new IndexArray(idx),gl.STATIC_DRAW);count=idx.length;
+      const edges=new IndexArray(idx.length*2);
+      for(let i=0,j=0;i<idx.length;i+=3){edges[j++]=idx[i];edges[j++]=idx[i+1];edges[j++]=idx[i+1];edges[j++]=idx[i+2];edges[j++]=idx[i+2];edges[j++]=idx[i];}
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,wireBuffer);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,edges,gl.STATIC_DRAW);wireCount=edges.length;
+      const quadEdges=new IndexArray(quads.length*2);
+      for(let i=0,j=0;i<quads.length;i+=4)for(let side=0;side<4;side++){quadEdges[j++]=quads[i+side];quadEdges[j++]=quads[i+(side+1)%4];}
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,quadWireBuffer);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,quadEdges,gl.STATIC_DRAW);quadWireCount=quadEdges.length;
+      const ground=[],floor=(bounds.min[2]-center[2])*scale-.013;
+      const point=(x,z)=>ground.push(x,floor,z,0,1,0,0);
+      for(let n=-16;n<=16;n++){const q=n*.16;point(q,-2.56);point(q,2.56);point(-2.56,q);point(2.56,q);}
+      gl.bindBuffer(gl.ARRAY_BUFFER,groundBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(ground),gl.STATIC_DRAW);groundCount=ground.length/7;
+      draw();
+    }
+    function fit(mode) { camera.yaw=mode==="medal"?.48:mode==="cylinder"?.32:-.42;camera.pitch=mode==="medal"?.61:mode==="cylinder"?.38:.82;camera.distance=mode==="medal"?2.9:mode==="cylinder"?4.4:3.8;camera.panX=0;camera.panY=0;draw(); }
+    const pointers=new Map();let previous=null;
+    function gesture(){const all=[...pointers.values()];if(all.length<2)return null;return{distance:Math.hypot(all[0].x-all[1].x,all[0].y-all[1].y),x:(all[0].x+all[1].x)/2,y:(all[0].y+all[1].y)/2};}
+    canvas.addEventListener("pointerdown",event=>{canvas.setPointerCapture(event.pointerId);pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});previous=gesture();});
+    canvas.addEventListener("pointermove",event=>{
+      const old=pointers.get(event.pointerId);if(!old)return;pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+      const current=gesture();
+      if(current&&previous){camera.distance=Math.max(1.4,Math.min(9,camera.distance*previous.distance/Math.max(1,current.distance)));camera.panX-=(current.x-previous.x)*.003;camera.panY+=(current.y-previous.y)*.003;previous=current;}
+      else if(pointers.size===1){const dx=event.clientX-old.x,dy=event.clientY-old.y;if(event.shiftKey||event.buttons===2){camera.panX-=dx*.003;camera.panY+=dy*.003;}else{camera.yaw-=dx*.009;camera.pitch=Math.max(-1.35,Math.min(1.45,camera.pitch+dy*.007));}}
+      draw();
+    });
+    const release=event=>{pointers.delete(event.pointerId);previous=gesture();};
+    canvas.addEventListener("pointerup",release);canvas.addEventListener("pointercancel",release);canvas.addEventListener("lostpointercapture",release);
+    canvas.addEventListener("wheel",event=>{event.preventDefault();camera.distance=Math.max(1.4,Math.min(9,camera.distance*Math.exp(event.deltaY*.001)));draw();},{passive:false});
+    canvas.addEventListener("dblclick",()=>fit(state.mode));canvas.addEventListener("contextmenu",event=>event.preventDefault());
+    canvas.addEventListener("keydown",event=>{
+      const key=event.key;if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","+","=","-","0","Home"].includes(key)){event.preventDefault();if(key==="ArrowLeft")camera.yaw-=.12;if(key==="ArrowRight")camera.yaw+=.12;if(key==="ArrowUp")camera.pitch=Math.min(1.45,camera.pitch+.1);if(key==="ArrowDown")camera.pitch=Math.max(-1.35,camera.pitch-.1);if(key==="+"||key==="=")camera.distance=Math.max(1.4,camera.distance*.9);if(key==="-")camera.distance=Math.min(9,camera.distance*1.1);if(key==="0"||key==="Home")fit(state.mode);draw();}
+    });
+    canvas.addEventListener("webglcontextlost",event=>{event.preventDefault();contextLost=true;$("webgl-fallback").classList.add("show");});
+    canvas.addEventListener("webglcontextrestored",()=>{toast("三维图形上下文已恢复，请刷新页面重新载入预览。");});
+    new ResizeObserver(draw).observe(canvas);
+    return { supportsUint32,setMesh,fit,draw,setWire(value){showWire=value;draw();},setWireMode(value){wireMode=value;draw();},setMaterial(value){material=value;draw();} };
+  }
+  let renderer=null;
+  try { renderer=createRenderer($("model-canvas")); }
+  catch(error){$("webgl-fallback").classList.add("show");console.warn(error.message);}
+  $("fit-button").addEventListener("click",()=>renderer?.fit(state.mode));
+  $("wire-button").addEventListener("click",()=>{const pressed=$("wire-button").getAttribute("aria-pressed")!=="true";$("wire-button").setAttribute("aria-pressed",String(pressed));$("wire-button").style.background=pressed?"#e1e8d7":"";renderer?.setWire(pressed);});
+  for(const button of document.querySelectorAll("[data-material]"))button.addEventListener("click",()=>{state.material=button.dataset.material;for(const item of document.querySelectorAll("[data-material]")){const active=item===button;item.classList.toggle("active",active);item.setAttribute("aria-pressed",String(active));}renderer?.setMaterial(state.material);});
+  window.addEventListener("beforeunload",()=>worker?.terminate());
+  updateModeText();updateTopologyControls();paintDensity();loadSample();
+  window.ReliefLab = Object.freeze({ core:createReliefCore(), getParameters:params });
+})();
+</script>
+</body>
+</html>

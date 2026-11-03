@@ -1,0 +1,31 @@
+{
+  "tools": [
+    {
+      "id": "letters",
+      "name": "标识字核算王",
+      "url": "/tools/letters/"
+    },
+    {
+      "id": "lantern",
+      "name": "平面灯罩运算器",
+      "url": "/tools/lantern/"
+    },
+    {
+      "id": "depth",
+      "name": "深度图模型生成器",
+      "url": "/tools/depth/"
+    },
+    {
+      "id": "knit",
+      "name": "针织效果切片器（测试中）",
+      "url": "/tools/knit/"
+    }
+  ],
+  "cat": {
+    "url": "/games/cat-cards/"
+  },
+  "cat3d": {
+    "url": "/games/cat-cards-3d/",
+    "version": "3.1.0"
+  }
+}

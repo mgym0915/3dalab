@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="在线 SVG 文字与图形 3D 打印价格估算工具，真实轮廓与镂空几何分析。">
+  <meta name="theme-color" content="#f5f6f8">
+  <title>标识字核算王 · 3D 打印价格核算</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23262239'/%3E%3Cpath d='m6 10 5 4 5-8 5 8 5-4-3 13H9Zm3 16h14' fill='none' stroke='%23f1cf78' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/style.css">
+  <script defer src="assets/opentype.min.js"></script>
+  <script defer src="assets/fonts/simhei.js"></script>
+  <script defer src="assets/fonts/ariblk.js"></script>
+  <script defer src="assets/dimension-sizing.js"></script>
+  <script defer src="assets/wait-status.js"></script>
+  <script defer src="assets/text-preview.js"></script>
+  <script defer src="assets/price-ui.js"></script>
+  <script defer src="assets/online.js"></script>
+</head>
+<body>
+  <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m3 7 9-5 9 5-9 5Zm0 5 9 5 9-5M3 17l9 5 9-5"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M13 3H5v18h14V9Zm0 0v6h6M8 14h8M8 17h5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V3H3v13h5"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+  </defs></svg>
+  <header class="topbar">
+    <a class="brand" href="./index.html" aria-label="标识字核算王首页"><span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m6 10 5 4 5-8 5 8 5-4-3 13H9Zm3 16h14"/></svg></span><span>标识字核算王</span><span class="brand-divider"></span><span class="brand-sub">3D 打印价格核算</span></a>
+    <div class="top-actions"><button class="offline-pill" id="devTrigger" type="button"><i></i>在线核算</button></div>
+  </header>
+  <main>
+    <div class="workspace">
+      <section class="card source-card" aria-labelledby="sourceTitle">
+        <div class="section-heading"><span class="section-number">01</span><h2 id="sourceTitle">图形输入</h2></div>
+        <div class="tabs" role="tablist" aria-label="图形来源"><button id="textTab" class="active" role="tab" aria-selected="true" aria-controls="textPanel">文字生成</button><button id="svgTab" role="tab" aria-selected="false" aria-controls="svgPanel">导入文件</button></div>
+        <div id="textPanel" role="tabpanel" aria-labelledby="textTab">
+          <label for="textInput">输入文字<span class="label-note" id="charCount">1 / 100</span></label>
+          <textarea id="textInput" maxlength="100" rows="3" spellcheck="false" placeholder="中文、英文、数字或符号">国</textarea>
+        </div>
+        <div id="svgPanel" role="tabpanel" aria-labelledby="svgTab" hidden>
+          <button class="upload-button" id="uploadButton"><svg><use href="#i-upload"/></svg><strong>选择 SVG / 3MF</strong><small>SVG 8 MB · 3MF 32 MB</small></button>
+          <div class="file-info" id="fileInfo"><svg><use href="#i-file"/></svg><span id="fileName">尚未选择文件</span></div>
+          <div class="import-mode-field"><label for="svgImportMode">SVG 导入方式</label><div class="select-wrap"><select id="svgImportMode"><option value="auto">自动识别</option><option value="contours">闭合轮廓填充</option><option value="appearance">原始填充 / 描边</option></select></div></div>
+          <p id="svgImportNote" class="field-description" hidden></p>
+        </div>
+        <input id="svgFile" type="file" accept=".svg,.3mf,image/svg+xml" hidden>
+        <div class="section-divider"></div>
+        <div class="subheading"><h3>原始实际尺寸</h3><label class="lock-badge ratio-lock" for="aspectLock"><input id="aspectLock" type="checkbox" checked><span>等比锁定</span></label></div>
+        <div class="dimensions"><div><label for="widthInput">宽度</label><div class="input-with-unit"><input id="widthInput" type="number" min="0.001" max="100000" step="0.1" value="100" inputmode="decimal"><span>mm</span></div></div><span class="dimension-times">×</span><div><label for="heightInput">高度</label><div class="input-with-unit"><input id="heightInput" type="number" min="0.001" max="100000" step="0.1" value="100" inputmode="decimal"><span>mm</span></div></div></div>
+        <div id="sourceError" class="error-message" role="alert" hidden></div>
+      </section>
+      <section class="card preview-card" aria-labelledby="previewTitle">
+        <div class="section-heading"><span class="section-number">02</span><h2 id="previewTitle">图形预览</h2></div>
+        <div class="preview-toolbar"><div class="segmented" aria-label="预览模式"><button id="fillButton" class="active" aria-pressed="true">填充</button><button id="outlineButton" aria-pressed="false">轮廓</button></div><button id="exportButton" class="icon-button" aria-label="导出当前轮廓为 SVG" title="导出 SVG"><svg><use href="#i-download"/></svg></button></div>
+        <div id="previewArea" class="preview-area" aria-label="图形预览">
+          <svg id="previewSvg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="当前图形的实际有效填充轮廓" viewBox="-220 -200 1440 1400"><g id="previewGroup"><path id="shapePath" fill-rule="nonzero" d=""/></g></svg>
+          <div id="previewEmpty" class="preview-empty"><span class="loader"></span><strong>正在核算</strong></div>
+          
+          <div id="widthRuler" class="ruler horizontal"><i></i><span>100.00 mm</span><i></i></div>
+          <span class="origin-dot"></span><span class="axis-label">X / Y</span>
+          
+        </div>
+        <div class="preview-status"><span><i class="tiny-dot" id="geometryDot"></i><span id="geometryStatus" role="status">准备几何分析</span></span><span id="contourCount">—</span></div>
+        <div class="sample-row"><span>试试样例</span><button id="sampleFrame">镂空方框<svg><use href="#i-arrow"/></svg></button><button id="sampleRing">同心圆环<svg><use href="#i-arrow"/></svg></button><button id="sampleGuo">国字</button></div>
+      </section>
+      <section class="card calculation-card" aria-labelledby="calcTitle">
+        <div class="section-heading"><span class="section-number">03</span><h2 id="calcTitle">核算结果</h2><select id="colorMode" class="compact-select" aria-label="颜色模式"><option value="single">单色模式</option><option value="multi">多色模式</option></select></div>
+        <div class="product-choice"><label for="productType">品类</label><select id="productType" aria-label="品类"><option value="smooth">光面字</option><option value="diamond">钻闪字</option></select></div>
+        <div class="product-choice"><label for="lightingMode">灯光</label><select id="lightingMode"><option value="steady">常亮</option><option value="rgb">RGB</option></select></div>
+        <div class="product-choice"><label for="installationMode">安装方式</label><select id="installationMode"><option value="wall">贴墙安装</option></select></div>
+        <div class="weight-card" id="weightCard" aria-busy="false">
+          <div class="weight-label">预计价格</div>
+          <div class="weight-pending" id="weightPending" role="status" hidden><span class="weight-spinner" aria-hidden="true"></span><div class="wait-copy"><span id="weightStatus">正在准备运算…</span><span id="weightEta" hidden></span></div></div>
+          <div class="weight-number" id="weightNumber"><output id="resultPrice" aria-live="polite">—</output><span>元</span></div>
+        </div>
+        <div id="calculationError" class="error-message" role="alert" hidden></div>
+      </section>
+    </div>
+  </main>
+  <button id="mobileGuide" class="mobile-guide" type="button" hidden><span class="weight-spinner" aria-hidden="true"></span><span id="guideStatus"></span><span class="guide-arrow" aria-hidden="true">↓</span></button>
+  <dialog id="priceDetails" class="price-details"><div class="detail-head"><h2>核算明细</h2><button id="closePriceDetails" type="button" aria-label="关闭核算明细">×</button></div><div id="priceDetailContent"></div></dialog>
+  <div id="toast" class="toast" role="status"></div>
+</body>
+</html>

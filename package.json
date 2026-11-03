@@ -1,0 +1,17 @@
+{
+  "name": "3dalab",
+  "version": "3.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check backend.mjs && node --check tool-services.mjs && node --check public/main.mjs",
+    "setup": "node scripts/init-local.mjs"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "optionalDependencies": {
+    "onnxruntime-node": "1.30.0"
+  }
+}

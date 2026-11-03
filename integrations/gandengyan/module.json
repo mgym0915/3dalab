@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "hostApi": 1,
+  "id": "gandengyan",
+  "name": "干瞪眼",
+  "kind": "game",
+  "space": "118",
+  "version": "1.0.4",
+  "softwareVersion": "1.0.0",
+  "entry": "index.html",
+  "backend": {
+    "kind": "node-handler-v1",
+    "entry": "lib/handler.mjs",
+    "factory": "createGameHandler",
+    "health": "api/health"
+  }
+}
